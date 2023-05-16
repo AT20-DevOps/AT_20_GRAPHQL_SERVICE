@@ -7,4 +7,4 @@ db.roles.insert({ name: "Admin" });
 db.roles.insert({ name: "Trainer" });
 db.roles.insert({ name: "Candidate" });
 let idAdmin = db.roles.findOne({name:"Admin"});
-db.users.insert({userName: "Admin",email:"admin@admin.com",firstPassword:"admin123",roleId:idAdmin._id,phone:"26479924"});
+db.users.insert({firstName: "Admin", lastName:"Admin",userName: "Admin",email:"admin@admin.com",firstPassword:"admin123",roleId:idAdmin._id,phone:"26479924"});

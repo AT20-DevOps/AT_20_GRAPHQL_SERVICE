@@ -43,6 +43,43 @@ export const resolvers = {
             console.log(filePath);
             return filePath;
         },
+        myMeetings: async (_, { _id }) => {
+          //axios to localhost port 8080
+          const config = {
+              method: 'get',
+              url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}/api/v1/interview/my-interviews`,
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              params: {
+                  id: _id
+              }
+          };
+          try {
+              const response = await axios.request(config);
+              return response.data;
+          } catch (error) {
+              console.log(error);
+          }
+      },
+      meeting: async (_, { _id }) => {
+          const config = {
+              method: 'get',
+              url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}/api/v1/interview/interview/${_id}`,
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+          };
+          try {
+              const response = await axios.request(config);
+              return response.data;
+          }
+          catch (error) {
+              console.log(error);
+          }
+
+      },
+
         getQuestionnaire: async (_, { test }) => {
           try {
             const response = await fetch(`http://${process.env.CONTAINER_NAME_QUESTIONNAIRE}:${process.env.QUESTIONNAIRE_SERVICE_PORT}/api/v1.0/questionnaire/${test}`);
@@ -70,7 +107,7 @@ export const resolvers = {
               url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}${process.env.MEETINGS_SERVICE_INTERVIEWS_PATH}`,
               headers: { }
             };
-      
+
             try {
               const response = await axios.request(config);
               return response.data;
@@ -78,8 +115,10 @@ export const resolvers = {
               console.error(error);
               return [];
             }
-          }
+          },
+
     },
+
 
     Mutation: {
 
@@ -95,7 +134,7 @@ export const resolvers = {
           data.append('width', String(width));
           data.append('height', String(height));
           const response = await axios.post(`${process.env.CONVERTER_SERVICE_URL}:${process.env.CONVERTER_SERVICE_PORT}${process.env.CONVERTER_SERVICE_IMAGE_PATH}`, data, {
-            headers: { 
+            headers: {
               ...data.getHeaders()
             },
             maxContentLength: Infinity,
@@ -117,15 +156,51 @@ export const resolvers = {
             const form = new FormData();
             form.append('file', fs.createReadStream(`./uploads/${upload.name}`));
             form.append('language', language);
-            const resp = await axios.post(`${process.env.COMPILER_SERVICE_URL}:${process.env.COMPILER_SERVICE_PORT}${process.env.COMPILER_SERVICE_PATH}`, form) 
-            .then(function (response) { console.log(response.data.stdout); data = response.data.stdout }) 
-            .catch(function (error) 
-            { console.log(error); 
-              data = error.response.data.stdout 
-              ? error.response.data.stdout 
-              : error.response.data.error; }); 
+            const resp = await axios.post(`${process.env.COMPILER_SERVICE_URL}:${process.env.COMPILER_SERVICE_PORT}${process.env.COMPILER_SERVICE_PATH}`, form)
+            .then(function (response) { console.log(response.data.stdout);
+
+              data = response.data.stdout
+            if(data === '')
+              {
+                data = response.data.stderr
+              }
+          })
+            .catch(function (error)
+            { console.log(error);
+              data = error.response.data.stdout
+              ? error.response.data.stdout
+              : error.response.data.error; });
             return data
         },
+
+        getToken: async (id_guest, name_guest, email_guest, host_guest, id_meeting) => {
+          const config = {
+              method: 'post',
+              url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}/api/v1/interview/token`,
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              data: {
+                  data: {
+                      id_guest,
+                      name_guest,
+                      email_guest,
+                      host_guest,
+                      id_meeting
+                  }
+              }
+          };
+          try {
+              const response = await axios.request(config);
+              console.log(response.data.token)
+              return response.data.token;
+          }
+          catch (error) {
+              console.log(error);
+          }
+      },
+
+
         createQuestion: async (_, { question, test, imgSrc, type, answer, options }) => {
             try {
               const response = await axios.post(`http://${process.env.CONTAINER_NAME_QUESTIONNAIRE}:${process.env.QUESTIONNAIRE_SERVICE_PORT}/api/v1.0/question/`, {
@@ -156,17 +231,18 @@ export const resolvers = {
             };
             try {
               const response = await axios.request(config);
-              response.data.guest_global_id.map((item) => {
-               // const client = twilio(accountSid, authToken);
-                    /*client.messages
-                        .create({
-                            from: 'whatsapp:+14155238886',
-                            body: 'Dear '+item.name+', you have a meeting scheduled for the date '+ response.data.date + ' at '+ response.data.start_time + ' to '+  response.data.end_time,
-                            to: "whatsapp:"+item.phone
-                        })
-                        .then(message => console.log(message.sid, message.to));*/
+            //   response.data.guest_global_id.map((item) => {
+            //     const client = twilio(accountSid, authToken);
+            //         client.messages
+            //             .create({
+            //                 from: 'whatsapp:+14155238886',
+            //                 body: 'Dear '+item.name+', you have a meeting scheduled for the date '+ response.data.date + ' at '+ response.data.start_time + ' to '+  response.data.end_time,
+            //                 to: "whatsapp:"+item.phone
+            //             })
+            //             .then(message => console.log(message.sid, message.to));
 
-             });
+            //  });
+            console.log(response.data)
               return JSON.stringify(response.data);
             } catch (error) {
               console.log(error);
@@ -202,35 +278,35 @@ export const resolvers = {
             //if (!userNameSearch && !userEmailSearch) {
             if (!userEmailSearch) {
             const newPassword= process.env.DEF_PASSWORD;
-            //const hashedPassword = await bcrypt.hash(newPassword, 10);
-            const firstPassword = newPassword;
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const firstPassword = hashedPassword;
             password = '';
             globalID = uuidv4();
             userName = uuidv4();
             age = '';
             const user = new User({
                 globalID,
-                firstName, 
+                firstName,
                 lastName,
                 userName,
                 firstPassword,
                 password,
-                email, 
-                phone, 
+                email,
+                phone,
                 country,
-                city, 
+                city,
                 age,
                 photo,
                 roleId,
             })
-            /*const client = twilio(accountSid, authToken);
+            const client = twilio(accountSid, authToken);
                 client.messages
                     .create({
                         from: 'whatsapp:+14155238886',
-                        body: 'Dear applicant, you are a candidate for the Pepito bootcamp, your username is the email address you used to register and your password is '+"*"+firstPassword+"*",
+                        body: 'Dear applicant, you are a candidate for the Jalasoft bootcamp, your username is'+ email +'the email address you used to register and your password is '+"*"+firstPassword+"*",
                         to: "whatsapp:"+phone
                     })
-                    .then(message => console.log(message.sid, message.to));*/
+                    .then(message => console.log(message.sid, message.to));
             const savedUser = await user.save();
             return savedUser;
             }

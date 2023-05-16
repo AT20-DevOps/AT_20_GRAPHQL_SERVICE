@@ -1,11 +1,10 @@
 FROM node:18-alpine3.16
 
-WORKDIR /app/user
+WORKDIR /app
 
-COPY package*.json ./
+COPY . .
 
 RUN npm install
 
-COPY . .
 
 CMD ["npm", "start"]
