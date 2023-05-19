@@ -1,1 +1,0 @@
-export const MongoDB_URI = 'mongodb://localhost/user'
