@@ -3,12 +3,11 @@ pipeline {
     stages {
         stage ('Test') {
             agent {
-                docker {
-                    image: FROM node:18-alpine3.16
-                }
+                docker { 'node:18-alpine3.16' }
             }
             steps {
                 sh 'npm version'
+                sh 'ls -la'
             }
            
         }
