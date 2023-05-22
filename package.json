@@ -9,13 +9,13 @@
     "test": "jest"
   },
   "jest": {
-    "coverageDirectory":"./output/code-coverage/",
-    "verbose": true,
     "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html"
-    ]
+    "collectCoverageFrom": ["./src/**"],
+    "coverageThreshold": {
+      "global": {
+        "lines": 90
+      }
+    }
   },
   "keywords": [],
   "author": "",
