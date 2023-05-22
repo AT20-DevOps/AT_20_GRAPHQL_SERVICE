@@ -5,12 +5,15 @@
   "main": "index.js",
   "type": "module",
   "jest": {
+    
     "reporters": [
       "default",
       [
         "jest-stare",
         {
+          "resultDir": "results/jest-stare",
           "reportTitle": "Unit test results"
+       
         }
       ]
     ],
