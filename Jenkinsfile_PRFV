@@ -8,5 +8,10 @@ pipeline {
                 sh 'npm test'
             }
         }
+        post {
+            always {
+                archiveArtifacts artifacts: 'output/code-coverage/index.html', followSymlinks: false
+            }
+        }
     }
 }
