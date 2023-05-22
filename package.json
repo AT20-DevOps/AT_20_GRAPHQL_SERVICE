@@ -11,9 +11,7 @@
       [
         "jest-stare",
         {
-          "resultDir": "results/jest-stare",
           "reportTitle": "Unit test results"
-       
         }
       ]
     ],
