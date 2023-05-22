@@ -9,7 +9,7 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'code-coverage/index.html', followSymlinks: false
+                    archiveArtifacts artifacts: 'coverage/index.html', followSymlinks: false
                 }
             }
         }
