@@ -6,9 +6,14 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm run test tests/'
-            }
+                    }
            
+                }
+            }
+    post {
+        
+        always {
+           archiveArtifacts artifacts: 'jest-stare/index.html', followSymlinks: false
         }
-    
-        }
+    }
     }
