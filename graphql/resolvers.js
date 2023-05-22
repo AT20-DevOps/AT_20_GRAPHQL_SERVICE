@@ -43,6 +43,7 @@ export const resolvers = {
             console.log(filePath);
             return filePath;
         },
+      
         myMeetings: async (_, { _id }) => {
           //axios to localhost port 8080
           const config = {
@@ -61,8 +62,11 @@ export const resolvers = {
           } catch (error) {
               console.log(error);
           }
+
         },
+      
         meeting: async (_, { _id }) => {
+
           const config = {
               method: 'get',
               url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}/api/v1/interview/interview/${_id}`,
@@ -77,8 +81,9 @@ export const resolvers = {
           catch (error) {
               console.log(error);
           }
-        },
 
+        },
+      
         getQuestionnaire: async (_, { test }) => {
           try {
             const response = await fetch(`http://${process.env.CONTAINER_NAME_QUESTIONNAIRE}:${process.env.QUESTIONNAIRE_SERVICE_PORT}/api/v1.0/questionnaire/${test}`);
@@ -107,7 +112,8 @@ export const resolvers = {
               maxBodyLength: Infinity,
               url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}${process.env.MEETINGS_SERVICE_INTERVIEWS_PATH}`,
               headers: { }
-          };
+
+            };
 
             try {
               const response = await axios.request(config);
