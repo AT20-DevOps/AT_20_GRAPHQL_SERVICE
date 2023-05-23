@@ -14,11 +14,11 @@ pipeline {
                 sh 'npm install'
                 sh 'npm test'
             }
-        }
-        post {
-            always {
-                archiveArtifacts artifacts: './jest_html_reporters.html', followSymlinks: false
+            post {
+                always {
+                    archiveArtifacts artifacts: './jest_html_reporters.html', followSymlinks: false
+                }
+            }
         }
     }
-}
 }
