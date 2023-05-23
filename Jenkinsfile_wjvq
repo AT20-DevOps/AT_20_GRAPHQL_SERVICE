@@ -11,6 +11,11 @@ pipeline {
                 sh 'npm install'
                 sh 'npm test'
             }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*', followSymlinks: false
+                }
+            }
         }
     }
 }
