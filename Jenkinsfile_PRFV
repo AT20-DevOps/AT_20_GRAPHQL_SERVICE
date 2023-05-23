@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+            DOCKER_PASS = credentials('docker_pass')
+    }
     stages {
         stage('Test') {
             agent { docker 'node:18-alpine3.16' }
@@ -16,6 +19,13 @@ pipeline {
         stage('Package'){
             steps{
                 sh 'docker build -t at20_graphql .'
+            }
+        }
+        stage('Publish'){
+            steps{
+                sh 'docker login -u pprfv -p ${DOCKER_PASS}'
+                sh 'echo docker tag at20_graphql pprfv/at20_graphql'
+                sh 'echo docker push pprfv/at20_graphql'
             }
         }
     }
