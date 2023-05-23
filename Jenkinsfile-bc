@@ -11,9 +11,8 @@ pipeline {
                 }
             }
     post {
-        
         always {
-           archiveArtifacts artifacts: 'jest-stare/index.html', followSymlinks: false
+           archiveArtifacts artifacts: 'jest-stare/', followSymlinks: false
         }
     }
     }
