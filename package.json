@@ -10,10 +10,15 @@
   },
   "jest": {
     "verbose": true,
-    "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html"
+    "reporters": [
+      "default",
+      [
+        "./node_modules/jest-html-reporters",
+        {
+          "publicPath": "./tests",
+          "filename": "report.html"
+        }
+      ]
     ]
   },
   "keywords": [],
