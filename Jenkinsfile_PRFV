@@ -15,9 +15,8 @@ pipeline {
         }
         stage('Package'){
             steps{
-                sh 'docker build -t AT_20_GRAPHQL_SERVICE .'
+                sh 'docker build -t at20_graphql .'
             }
         }
-        
     }
 }
