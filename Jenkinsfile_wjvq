@@ -12,5 +12,9 @@ pipeline {
                 sh 'npm test'
             }
         }
+        post {
+            always {
+                archiveArtifacts artifacts: './jest_html_reporters.html'
+        }
     }
 }
