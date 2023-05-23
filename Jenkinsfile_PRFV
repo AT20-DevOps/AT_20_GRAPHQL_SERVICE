@@ -14,10 +14,10 @@ pipeline {
             }
         }
         stage('Package'){
-            docker build -t AT_20_GRAPHQL_SERVICE .
+            steps{
+                sh 'docker build -t AT_20_GRAPHQL_SERVICE .'
+            }
         }
-        stage('Publish'){
-
-        }
+        
     }
 }
