@@ -8,6 +8,14 @@
     "start": "node index.js",
     "test": "jest"
   },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -34,5 +42,8 @@
     "twilio": "^4.10.0",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.18.2"
   }
 }

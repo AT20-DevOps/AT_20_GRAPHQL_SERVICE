@@ -7,6 +7,11 @@ pipeline {
                 sh 'npm install'
                 sh 'npm test'
             }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'coverage/', followSymlinks: false
+                }
+            }
         }
     }
 }
