@@ -36,8 +36,17 @@
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13"
   },
-  "jest":{
+  "jest": {
     "verbose": true,
-    "reporters":["./node_modules/jest-html-reporters"]
+    "reporters": [
+      "default",
+      [
+        "./node_modules/jest-html-reporters",
+        {
+          "publicPath": "./tests",
+          "filename": "report.html"
+        }
+      ]
+    ]
   }
 }
