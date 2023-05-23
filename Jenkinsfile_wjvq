@@ -16,7 +16,7 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'jest_html_reporters.html', followSymlinks: false
+                    archiveArtifacts artifacts: 'tests/report.html', followSymlinks: false
                 }
             }
         }

@@ -39,7 +39,14 @@
   "jest": {
     "verbose": true,
     "reporters": [
-      "./node_modules/jest-html-reporters"
+      "default",
+      [
+        "./node_modules/jest-html-reporters",
+        {
+          "publicPath": "./tests",
+          "filename": "report.html"
+        }
+      ]
     ]
   }
 }
