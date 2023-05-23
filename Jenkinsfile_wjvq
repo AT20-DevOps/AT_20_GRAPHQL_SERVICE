@@ -26,8 +26,8 @@ pipeline {
             }
         }
         stage('Publish'){
-            steps{
-                sh 'docker login -u willvq -p ${DOCKER_PASS}'
+            steps {
+                sh 'docker login -u willvq -p $DOCKER_PASS'
                 sh 'echo docker tag graphql-service-wjvq willvq/graphql'
                 sh 'echo docker push willvq/graphql'
             }
