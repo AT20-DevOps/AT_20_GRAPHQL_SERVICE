@@ -24,8 +24,8 @@ pipeline {
         stage('Publish'){
             steps{
                 sh 'docker login -u pprfv -p ${DOCKER_PASS}'
-                sh 'echo docker tag at20_graphql pprfv/pprfv/at20_graphql'
-                sh 'echo docker push pprfv/pprfv/at20_graphql'
+                sh 'echo docker tag at20_graphql pprfv/pprfv:at20_graphql'
+                sh 'echo docker push pprfv/pprfv:at20_graphql'
             }
         }
     }
