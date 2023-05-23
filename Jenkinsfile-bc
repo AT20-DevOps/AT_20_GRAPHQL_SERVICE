@@ -18,13 +18,13 @@ pipeline {
                 }
         stage('Package'){
             steps{
-                sh 'docker build -t graphQl_service .'
+                sh 'docker build -t graphql_service .'
                 }
             }
         stage('Publish'){
             steps{
                 sh 'docker login -u bdcc10 -p ${DOCKER_PASS}'
-                sh 'docker tag graphQl_service bdcc10/bdcc-at20_graphql_service'
+                sh 'docker tag graphql_service bdcc10/bdcc-at20_graphql_service'
                 sh 'docker push bdcc10/bdcc-at20_graphql_service'
                 }
             }
