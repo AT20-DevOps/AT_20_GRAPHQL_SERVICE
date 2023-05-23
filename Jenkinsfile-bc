@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_PASS = credentials('docker_pass')
+    }
     stages {
         stage ('Test') {
             agent { docker 'node:18-alpine3.16' }
@@ -7,12 +10,11 @@ pipeline {
                 sh 'npm install'
                 sh 'npm run test tests/'
                     }
-           
+            post {
+                always {
+                    archiveArtifacts artifacts: 'jest-stare/', followSymlinks: false
+                        }
+                    }
                 }
             }
-    post {
-        always {
-           archiveArtifacts artifacts: 'jest-stare/', followSymlinks: false
         }
-    }
-    }
