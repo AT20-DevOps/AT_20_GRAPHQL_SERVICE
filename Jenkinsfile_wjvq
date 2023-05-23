@@ -2,6 +2,9 @@ pipeline {
     agent any
     stages {
         stage('Test') {
+             when {
+                branch 'task5_wjvq'
+            }
             agent {
                 docker {
                     image 'node:18-alpine3.16'
