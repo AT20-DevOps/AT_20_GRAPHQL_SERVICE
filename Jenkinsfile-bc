@@ -1,24 +1,32 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_PASS = credentials('docker_pass')
+    }
     stages {
-        stage ('Hello') {
+        stage ('Test') {
+            agent { docker 'node:18-alpine3.16' }
             steps {
-                sh 'echo Hello World'
-                sh 'echo Hello class'
+                sh 'npm install'
+                sh 'npm run test tests/'
+                    }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'jest-stare/', followSymlinks: false
+                        }
+                    }
+                }
+        stage('Package'){
+            steps{
+                sh 'docker build -t graphQl_service .'
+                }
             }
-        }
-        stage ('Tests') {
-            steps {
-                sh 'echo Here is the testing command'
+        stage('Publish'){
+            steps{
+                sh 'docker login -u bdcc10 -p ${DOCKER_PASS}'
+                sh 'docker tag graphQl_service bdcc10/bdcc-at20_graphql_service'
+                sh 'docker push bdcc10/bdcc-at20_graphql_service'
+                }
             }
-            }
-        stage ('Messages') {
-
-            steps {
-                sh 'echo This is a message from the third stage'
-            }
-        }
-
-        
         }
     }
