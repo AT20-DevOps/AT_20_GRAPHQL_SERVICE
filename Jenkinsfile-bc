@@ -4,8 +4,12 @@ pipeline {
         DOCKER_PASS = credentials('docker_pass')
     }
     stages {
-        stage ('Test') {
-            agent { docker 'node:18-alpine3.16' }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine3.16'
+                }
+            }
             steps {
                 sh 'npm install'
                 sh 'npm run test tests/'
@@ -26,7 +30,9 @@ pipeline {
                 sh 'docker login -u bdcc10 -p ${DOCKER_PASS}'
                 sh 'docker tag graphql_service bdcc10/bdcc-at20_graphql_service'
                 sh 'docker push bdcc10/bdcc-at20_graphql_service'
+
                 }
             }
         }
     }
+}
