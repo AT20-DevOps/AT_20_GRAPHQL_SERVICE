@@ -1,16 +1,21 @@
 pipeline {
     agent any
     stages {
-        stage ('Test') {
-            agent { docker 'node:18-alpine3.16' }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine3.16'
+                }
+            }
             steps {
                 sh 'npm install'
-                sh 'npm run test tests/'
+                sh 'npm test'
             }
-           
-        }
-        
-
-        
+            post {
+                always {
+                    archiveArtifacts artifacts: 'jest-stare/', followSymlinks: false
+                }
+            }
         }
     }
+}
