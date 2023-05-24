@@ -1,6 +1,5 @@
       import express from 'express';
       import { ApolloServer } from 'apollo-server-express';
-      import { expressMiddleware } from '@apollo/server/express4';
       import cors  from 'cors';
       import bodyParser from 'body-parser';
       import mongoose from 'mongoose';

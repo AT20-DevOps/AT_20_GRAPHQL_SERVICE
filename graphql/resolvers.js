@@ -43,6 +43,7 @@ export const resolvers = {
             console.log(filePath);
             return filePath;
         },
+      
         myMeetings: async (_, { _id }) => {
           //axios to localhost port 8080
           const config = {
@@ -61,8 +62,11 @@ export const resolvers = {
           } catch (error) {
               console.log(error);
           }
-      },
-      meeting: async (_, { _id }) => {
+
+        },
+      
+        meeting: async (_, { _id }) => {
+
           const config = {
               method: 'get',
               url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}/api/v1/interview/interview/${_id}`,
@@ -78,8 +82,8 @@ export const resolvers = {
               console.log(error);
           }
 
-      },
-
+        },
+      
         getQuestionnaire: async (_, { test }) => {
           try {
             const response = await fetch(`http://${process.env.CONTAINER_NAME_QUESTIONNAIRE}:${process.env.QUESTIONNAIRE_SERVICE_PORT}/api/v1.0/questionnaire/${test}`);
@@ -90,6 +94,7 @@ export const resolvers = {
             throw new Error(error.type);
           }
         },
+
         getQuestionByID: async (_, { id }) => {
             try {
               const response = await fetch(`http://${process.env.CONTAINER_NAME_QUESTIONNAIRE}:${process.env.QUESTIONNAIRE_SERVICE_PORT}/api/v1.0/question/${id}`);
@@ -100,12 +105,14 @@ export const resolvers = {
               throw new Error(error.type);
             }
           },
+
         getMeetings: async () => {
-            const config = {
+          const config = {
               method: 'get',
               maxBodyLength: Infinity,
               url: `${process.env.MEETINGS_SERVICE_URL}:${process.env.MEETINGS_SERVICE_PORT}${process.env.MEETINGS_SERVICE_INTERVIEWS_PATH}`,
               headers: { }
+
             };
 
             try {
@@ -116,7 +123,6 @@ export const resolvers = {
               return [];
             }
           },
-
     },
 
 
@@ -148,16 +154,16 @@ export const resolvers = {
         }
       },
 
-        compiler: async (parent, { file, language }) => {
-            const { filename, mimetype, createReadStream } = await file;
-            let data = '';
-            const stream = createReadStream();
-            const upload = await saveImagesWithStream({ filename, mimetype, stream });
-            const form = new FormData();
-            form.append('file', fs.createReadStream(`./uploads/${upload.name}`));
-            form.append('language', language);
-            const resp = await axios.post(`${process.env.COMPILER_SERVICE_URL}:${process.env.COMPILER_SERVICE_PORT}${process.env.COMPILER_SERVICE_PATH}`, form)
-            .then(function (response) { console.log(response.data.stdout);
+      compiler: async (parent, { file, language }) => {
+          const { filename, mimetype, createReadStream } = await file;
+          let data = '';
+          const stream = createReadStream();
+          const upload = await saveImagesWithStream({ filename, mimetype, stream });
+          const form = new FormData();
+          form.append('file', fs.createReadStream(`./uploads/${upload.name}`));
+          form.append('language', language);
+          const resp = await axios.post(`${process.env.COMPILER_SERVICE_URL}:${process.env.COMPILER_SERVICE_PORT}${process.env.COMPILER_SERVICE_PATH}`, form)
+          .then(function (response) { console.log(response.data.stdout);
 
               data = response.data.stdout
             if(data === '')
