@@ -28,19 +28,18 @@ pipeline {
                 }
             }
         }
-        stage("build & sonar analysis ") {
-        agent any
+        stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarTiss'){
-                    // If you are using Windows then you should use "bat" step
-                    // Since unit testing is out of the scope we skip them
-                    sh "mvn -B clean deploy sonar:sonar"
+                withSonarQubeEnv('My SonarQube Server') {
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
+
         }
         stage('QualityGate'){
             steps {
                 timeout(time: 3, unit: 'MINUTES') {
+
                     waitForQualityGate abortPipeline: true
                 }
             }
