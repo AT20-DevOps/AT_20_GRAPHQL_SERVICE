@@ -23,13 +23,13 @@ pipeline {
                 }
         stage('Code inspection') {
             steps {
-                withSonarQubeEnv('My SonarQube Server') {
+                //withSonarQubeEnv('My SonarQube Server') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                         -Dsonar.organization=at20-bdcc \
                         -Dsonar.projectKey=at20-bdcc_at20-devops \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io'
-                    }
+                    //}
                 script {
                     def qg = waitForQualityGate()
                     sh "echo ${qg.status}"
