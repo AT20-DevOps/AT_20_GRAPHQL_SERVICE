@@ -28,11 +28,8 @@ pipeline {
         }
         stage('QualityGate') {
             steps {
-                script {
-                    def qualityGateStatus = waitForQualityGate()
-                    if (qualityGateStatus != 'OK') {
-                        error("Quality gate check failed. Status: ${qualityGateStatus}")
-                    }
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
@@ -46,16 +43,6 @@ pipeline {
                 sh 'docker login -u pprfv -p ${DOCKER_PASS}'
                 sh 'docker tag at20_graphql pprfv/pprfv'
                 sh 'docker push pprfv/pprfv'
-            }
-        }
-    }
-
-     post {
-        always {
-            failure {
-                script {
-                    currentBuild.result = 'FAILURE'
-                }
             }
         }
     }
