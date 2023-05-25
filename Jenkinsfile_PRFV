@@ -27,12 +27,11 @@ pipeline {
             }
         }
         stage('QualityGate') {
-            when {
-                branch 'master'
-            }
             steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                script {
+                    timeout(time: 3, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
                 }
             }
         }
