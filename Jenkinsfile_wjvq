@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment{
+        DOCKER_PASS = credentials('docker_pass')
+    }
     stages {
         stage('Test') {
             agent {
@@ -13,9 +16,22 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*', followSymlinks: false
+                    archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach, test/jest-html-reporters-attach/index.js, test/jest-html-reporters-attach/result.js', followSymlinks: false
                 }
             }
+        }
+        stage('Package'){
+            steps {
+                sh 'docker build -t graphql-service-wjvq .'
+            }
+        }
+        stage('Publish'){
+            steps {
+                sh 'docker login -u willvq -p $DOCKER_PASS'
+                sh 'docker tag graphql-service-wjvq willvq/graphql'
+                sh 'docker push willvq/graphql'
+            }
+
         }
     }
 }
