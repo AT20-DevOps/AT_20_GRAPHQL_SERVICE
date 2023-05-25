@@ -28,13 +28,18 @@ pipeline {
                         -Dsonar.host.url=https://sonarcloud.io'
             }
         }
+        stage('Scan') {
+            steps {
+                withSonarQubeEnv(installationName: 'sq1') {
+                    sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
+                }
+            }
+        }
+
         stage('QualityGate') {
             steps {
-                script {
-                    def qg = waitForQualityGate()
-                    if (qg.status != 'OK') {
-                        error "Quality Gate did not pass. Status: ${qg.status}"
-                    }
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
