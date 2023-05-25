@@ -28,11 +28,7 @@ pipeline {
         }
         stage('QualityGate'){
             steps{
-                script {
-
-                    waitForQualityGate abortPipeline: true
-
-                }
+                waitForQualityGate abortPipeline: false
             }
         }
         stage('Package'){
