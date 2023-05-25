@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_PASS = credentials('docker_pass')
-        SONAR_TOKEN = credentials('SONAR_token')
+        SONAR_TOKEN = credentials('sonar_token')
     }
     stages {
         stage('Test') {
@@ -48,4 +48,3 @@ pipeline {
             }
         }
     }
-}
