@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        maven 'maven3'
+    }
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
@@ -21,17 +24,20 @@ pipeline {
         }
         stage('CodeInspection') {
             steps {
-                withSonarQubeEnv('sq1') {
-                    sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
+                sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                         -Dsonar.organization=at20-graphql \
                         -Dsonar.projectKey=at20-PRFV \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io'
-
+            }
+        }
+        stage('Scan') {
+            steps {
+                withSonarQubeEnv(installationName: 'sq1') {
+                    sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
                 }
             }
         }
-
 
         stage('QualityGate') {
             steps {
