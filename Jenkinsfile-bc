@@ -23,18 +23,15 @@ pipeline {
                 }
         stage('Code inspection') {
             steps {
-                withSonarQubeEnv('My SonarQube Server') {
+                //withSonarQubeEnv('My SonarQube Server') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                         -Dsonar.organization=at20-bdcc \
                         -Dsonar.projectKey=at20-bdcc_at20-devops \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io'
-                    }
+                    //}
                 }
-            }
-        
-        stage('Quality gate') {
-           steps {
+            steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
                     def qg = waitForQualityGate()
@@ -46,6 +43,20 @@ pipeline {
               }
             }
         }
+        
+        // stage('Quality gate') {
+        //    steps {
+        //       timeout(time: 600, unit: 'SECONDS') {
+        //       script {
+        //             def qg = waitForQualityGate()
+        //             sh "echo ${qg.status}"
+        //             if (qg.status != 'OK') {
+        //             error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        //             }
+        //         }
+        //       }
+        //     }
+        // }
         stage('Package'){
             steps{
                 sh 'docker build -t graphql_service .'
