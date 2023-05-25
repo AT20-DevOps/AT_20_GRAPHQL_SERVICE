@@ -3,6 +3,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
+        SONAR_TOOL = credentials('sonar_scanner')
     }
     stages {
         stage('Test') {
@@ -23,7 +24,7 @@ pipeline {
                 }
         stage('Code inspection') {
             steps {
-                withSonarQubeEnv('My SonarQube Server') {
+                withSonarQubeEnv("${SONAR_TOOL}") {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                         -Dsonar.organization=at20-bdcc \
                         -Dsonar.projectKey=at20-bdcc_at20-devops \
