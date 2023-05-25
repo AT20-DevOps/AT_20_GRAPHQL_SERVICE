@@ -19,16 +19,16 @@ pipeline {
         }
         stage('CodeInspection'){
             steps{
-                sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
+                script{
+                    sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                         -Dsonar.organization=at20-graphql \
                         -Dsonar.projectKey=at20-PRFV \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io'
-            }
-        }
-        stage('QualityGate'){
-            steps{
-                waitForQualityGate abortPipeline: false
+                }
+                timeout(time: 3, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
         stage('Package'){
