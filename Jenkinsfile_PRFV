@@ -26,12 +26,12 @@ pipeline {
                         -Dsonar.host.url=https://sonarcloud.io'
             }
         }
-        stage('QualityGate') {
-            steps {
+        stage('QualityGate'){
+            steps{
                 script {
-                    timeout(time: 3, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true
-                    }
+
+                    waitForQualityGate abortPipeline: true
+
                 }
             }
         }
