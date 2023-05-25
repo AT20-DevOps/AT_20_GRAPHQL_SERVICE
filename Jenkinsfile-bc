@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
-        SONAR_TOOL = credentials('sonar_scanner')
+        //SONAR_TOOL = credentials('sonar_scanner')
     }
     stages {
         stage('Test') {
