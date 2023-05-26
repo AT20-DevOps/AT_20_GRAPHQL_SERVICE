@@ -4,8 +4,12 @@ pipeline {
         maven 'maven3'
     }
     environment {
+<<<<<<< HEAD
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
+=======
+            DOCKER_PASS = credentials('docker_pass')
+>>>>>>> parent of d687890 (task7 add code inspection)
     }
     stages {
         stage('Test') {
@@ -22,6 +26,7 @@ pipeline {
                 }
             }
         }
+<<<<<<< HEAD
         stage('CodeInspection') {
             steps {
                 withSonarQubeEnv('sq1') {
@@ -50,6 +55,10 @@ pipeline {
         }
         stage('Package') {
             steps {
+=======
+        stage('Package'){
+            steps{
+>>>>>>> parent of d687890 (task7 add code inspection)
                 sh 'docker build -t at20_graphql .'
             }
         }
