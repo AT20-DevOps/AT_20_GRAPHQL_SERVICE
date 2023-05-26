@@ -20,6 +20,9 @@ pipeline {
             }
         }
         stage('CodeInspection') {
+            agent {
+                docker 'sonarsource/sonar-scanner-cli'
+            }
             steps {
                 withSonarQubeEnv('sq1') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
