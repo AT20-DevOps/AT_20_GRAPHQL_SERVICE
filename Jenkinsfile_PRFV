@@ -24,7 +24,7 @@ pipeline {
         }
         stage('CodeInspection') {
             steps {
-                withSonarQubeEnv('sonar_scanner') {
+                withSonarQubeEnv('sq1') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
                             -Dsonar.organization=at20-graphql \
                             -Dsonar.projectKey=at20-PRFV \
