@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_PASS = credentials('docker_pass')
+        SONAR_TOKEN = credentials('sonar_token')
+    }
+    stages {
+        stage('Test') {
+            agent {
+                docker 'node:18-alpine3.16'
+            }
+            steps {
+                sh 'npm install'
+                sh 'npm test'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*', followSymlinks: false
+                }
+            }
+        }
+        stage('CodeInspection') {
+            agent {
+                docker 'sonarsource/sonar-scanner-cli'
+            }
+            steps {
+                withSonarQubeEnv('sq1') {
+                    sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
+                            -Dsonar.organization=at20-graphql \
+                            -Dsonar.projectKey=at20-PRFV \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io'
+                }
+            }
+        }
+        stage('Quality gate') {
+           steps {
+              timeout(time: 600, unit: 'SECONDS') {
+              script {
+                    def qg = waitForQualityGate()
+                    sh "echo ${qg.status}"
+                    if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+              }
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'docker build -t at20_graphql .'
+            }
+        }
+        stage('Publish') {
+            steps {
+                sh 'docker login -u pprfv -p ${DOCKER_PASS}'
+                sh 'docker tag at20_graphql pprfv/pprfv'
+                sh 'docker push pprfv/pprfv'
+            }
+        }
+    }
+}
