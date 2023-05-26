@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment{
-        DOCKER_PASS = credentials('docker_pass')sonarqube
+        DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
     }
     stages {
