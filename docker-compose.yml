@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
   user_service:
+    env_file:
+      -  .env
     container_name: $USER_SERVICE_NAME
     image: pprfv/pprfv:at20_graphql
     ports:
