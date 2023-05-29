@@ -58,5 +58,17 @@ pipeline {
                 sh 'docker push pprfv/pprfv'
             }
         }
+        stage('Deplytodev') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+
+    }
+    post {
+        always {
+            sh 'docker rmi $(docker images -f "dangling=true" -q)'
+            sh 'docker system prune -a'
+        }
     }
 }

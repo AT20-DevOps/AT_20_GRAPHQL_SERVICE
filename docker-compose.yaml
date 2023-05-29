@@ -1,11 +1,11 @@
 version: '3.5'
 
-services: 
+services:
   user_service:
     env_file:
       -  .env
     container_name: $USER_SERVICE_NAME
-    build: .
+    build: at20_graphql
     ports:
       - $USER_SERVICE_EXPOSE_PORT:$USER_SERVICE_PORT
     expose:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - mongo
     restart: always
- 
+
   mongo:
     env_file:
       -  .env
