@@ -41,6 +41,6 @@ services:
       MONGO_DB_PORT: $MONGO_DB_PORT
     command: $MONGO_DB_COMMAND
     volumes:
-    - $MONGO_DB_VOLUMNES
+    - $MONGO_DB_VOLUME
     restart: always
 
