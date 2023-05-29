@@ -58,9 +58,9 @@ pipeline {
                 sh 'docker push pprfv/pprfv'
             }
         }
-        stage('Deplytodev') {
+        stage('Deploytodev') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker compose -f docker-compose.prfv.yml up -d'
             }
         }
 
