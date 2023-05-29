@@ -62,7 +62,7 @@ pipeline {
             }
         stage ('DeployToDev') {
             steps {
-                sh 'docker-compose -f docker-compose.dev.yaml up -d'
+                sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
                 sh 'echo command to run smoke test'
             }
 
@@ -71,7 +71,7 @@ pipeline {
 
     post {
         always {
-            sh 'docker rmi ${docker images -f "dangling=true" -q} '
+            sh 'docker rmi $(docker images -f "dangling=true" -q) '
         }
     }
        
