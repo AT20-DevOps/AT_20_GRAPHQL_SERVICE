@@ -61,7 +61,7 @@ pipeline {
         }
         stage('Deploytodev') {
             steps {
-                sh 'docker compose -f docker-compose.prfv.yml up -d'
+                sh 'docker compose -f docker-compose.wjvq.yml up -d'
             }
         }
     }
