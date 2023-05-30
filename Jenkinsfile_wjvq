@@ -59,5 +59,15 @@ pipeline {
             }
 
         }
+        stage('Deploytodev') {
+            steps {
+                sh 'docker compose -f docker-compose.prfv.yml up -d'
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker rmi $(docker images -f "dangling=true" -q)'
+        }
     }
 }
