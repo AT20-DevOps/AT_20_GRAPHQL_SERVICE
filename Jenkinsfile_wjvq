@@ -61,7 +61,7 @@ pipeline {
         }
         stage('Deploytodev') {
             steps {
-                sh 'docker-compose -f docker-compose.wjvq.yaml up -d'
+                sh 'DOCKER_HOST=ssh://192.168.33.61 docker-compose -f docker-compose.wjvq.yaml up -d'
             }
         }
     }
