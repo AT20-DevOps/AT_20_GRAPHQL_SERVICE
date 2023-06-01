@@ -35,6 +35,7 @@
            }
            next();
           });
+
           app.use(graphqlUploadExpress());
           server.applyMiddleware({ app });
 

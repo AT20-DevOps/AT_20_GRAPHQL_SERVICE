@@ -3,6 +3,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
+        TARGET_HOST = '192.168.56.70'
     }
     stages {
         stage('Test') {
@@ -60,5 +61,19 @@ pipeline {
 
                 }
             }
+        stage ('DeployToDev') {
+            steps {
+                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+            }
+
         }
     }
+
+    post {
+        always {
+            sh 'docker image prune -a -f'
+            sh 'docker system prune -a -f'
+        }
+    }
+       
+}
