@@ -12,16 +12,14 @@ pipeline {
     stages {
         stage('Test') {
             agent {
-                docker 'echo node:18-alpine3.16'
+                docker 'node:18-alpine3.16'
             }
             steps {
-                sh 'echo npm install'
-                sh 'echo npm test'
+                sh 'npm install'
+                sh 'npm test'
             }
             post {
-
                 always {
-                    when { expression { params.skip_test != true } }
                     archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*', followSymlinks: false
                 }
             }
