@@ -19,8 +19,9 @@ pipeline {
                 sh 'echo npm test'
             }
             post {
-                when { expression { params.skip_test != true } }
+
                 always {
+                    when { expression { params.skip_test != true } }
                     archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*', followSymlinks: false
                 }
             }
