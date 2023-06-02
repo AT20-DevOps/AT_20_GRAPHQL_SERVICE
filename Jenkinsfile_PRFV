@@ -71,7 +71,7 @@ pipeline {
         stage('Deploytodev') {
             steps {
                 //sh 'docker compose -f docker-compose.prfv.yml up -d'
-                sh 'docker-compose -e TAG_VERSION=${TAG_VERSION} -f docker-compose.prfv.yml up -d'
+                sh 'docker-compose --env TAG_VERSION=${TAG_VERSION} -f docker-compose.prfv.yml up -d'
             }
         }
         stage('DeployAuto') {
