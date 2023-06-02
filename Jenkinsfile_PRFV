@@ -76,7 +76,7 @@ pipeline {
         }
         stage('DeployAuto') {
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.prfv.yaml up -d'
+                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose --env TAG_VERSION=${TAG_VERSION} -f docker-compose.prfv.yaml up -d'
                 sh 'echo command to run automation tests'
             }
         }
