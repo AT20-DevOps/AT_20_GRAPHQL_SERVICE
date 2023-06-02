@@ -71,8 +71,9 @@ pipeline {
             }
         stage ('DeployToDev') {
             steps {
-                sh 'echo TAG_VERSION=${GIT_COMMIT_HASH} > .env.version'
-                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
+                sh 'echo $TAG_VERSION'
+                sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
         }
          stage ('DeployToAuto') {
