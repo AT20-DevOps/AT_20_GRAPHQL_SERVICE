@@ -12,7 +12,7 @@ pipeline {
     }
     stages {
         stage('Test') {
-            when { expression { params.skip_stage != true } }
+            //when { expression { params.skip_stage != true } }
             agent {
                 docker {
                     image 'node:18-alpine3.16'
@@ -21,7 +21,6 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm run test tests/'
-                sh 'echo %GIT_COMMIT%'
                     }
             post {
                 always {
@@ -30,7 +29,7 @@ pipeline {
                     }
                 }
         stage('Code inspection') {
-            when { expression { params.skip_stage != true } }
+            //when { expression { params.skip_stage != true } }
             steps {
                 withSonarQubeEnv('sonar_scanner') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
@@ -44,7 +43,7 @@ pipeline {
         }
         
         stage('Quality gate') {
-            when { expression { params.skip_stage != true } }
+            //when { expression { params.skip_stage != true } }
             steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
@@ -73,8 +72,6 @@ pipeline {
             }
         stage ('DeployToDev') {
             steps {
-                //sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
-                //sh 'echo ${TAG_VERSION}'
                 sh 'echo ${GIT_COMMIT_HASH}'
                 sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
@@ -82,7 +79,7 @@ pipeline {
          stage ('DeployToAuto') {
             when { expression { params.skip_stage != true } }
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+                sh 'DOCKER_HOST=ssh://${TARGET_HOST} docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
         }
     }
