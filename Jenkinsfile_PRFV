@@ -8,6 +8,7 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_token')
         TARGET_HOST = '192.168.56.61'
         TAG_VERSION = "1.0"
+        GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true)
     }
     stages {
         stage('Test') {
@@ -65,19 +66,19 @@ pipeline {
                 //sh 'export TAG=$(git log --pretty=format:'%h' -n 1)'
                 sh 'echo %GIT_COMMIT%'
                 sh 'docker login -u pprfv -p ${DOCKER_PASS}'
-                sh 'docker tag at20_graphql pprfv/pprfv:${TAG_VERSION}'
-                sh 'docker push pprfv/pprfv:${TAG_VERSION}'
+                sh 'docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}'
+                sh 'docker push pprfv/pprfv:${GIT_COMMIT_HASH}'
             }
         }
         stage('Deploytodev') {
             steps {
                 //sh 'docker compose -f docker-compose.prfv.yml up -d'
-                sh 'docker-compose -f docker-compose.prfv.yml -e TAG_VERSION=${TAG_VERSION} up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yml up -d'
             }
         }
         stage('DeployAuto') {
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.prfv.yaml -e TAG_VERSION=${TAG_VERSION} up -d'
+                sh 'DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yaml up -d'
                 sh 'echo command to run automation tests'
             }
         }
