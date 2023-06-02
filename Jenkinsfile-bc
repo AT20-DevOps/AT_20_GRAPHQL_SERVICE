@@ -57,7 +57,7 @@ pipeline {
             }
         }
         stage('Package'){
-            steps{// git commit -m "Tag version modified in Jenkinsfile-bc"
+            steps{
                 sh 'docker build -t graphql_service .'
                 }
             }
