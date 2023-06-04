@@ -1,7 +1,8 @@
 format_version: 10
+
 pipelines:
   test1:
-    group: AT20Group
+    group: defaultGroup
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
@@ -12,31 +13,45 @@ pipelines:
         auto_update: true
         branch: task9
     stages:
-    - stage1: Test
-        fetch_materials: true
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          - name: RunTests
-            tasks:
-              - exec:
-                  command: npm install
-              - exec:
-                  command: npm test
-            artifacts:
-              - tests/report.html
-              - test/jest-html-reporters-attach/*
-
-    - stage2: CodeInspection
-        jobs:
-          - name: RunCodeInspection
-            tasks:
-              - exec:
-                  command: sonar-scanner \
-                            -Dsonar.organization=at20-graphql \
-                            -Dsonar.projectKey=at20-PRFV \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=https://sonarcloud.io
+      - Test:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          jobs:
+            - npm-install:
+                docker_image: node:18-alpine3.16
+                command: npm install
+            - npm-test:
+                docker_image: node:18-alpine3.16
+                command: npm test
+          tasks:
+            - exec:
+                command: echo 'Placeholder for post actions'
+      - CodeInspection:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          jobs:
+            - sonarqube-scanner:
+                docker_image: sonarsource/sonar-scanner-cli
+                command: |
+                  sonar-scanner \
+                    -Dsonar.organization=at20-graphql \
+                    -Dsonar.projectKey=at20-PRFV \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=https://sonarcloud.io
+          tasks:
+            - exec:
+                command: echo 'Placeholder for post actions'
+      - QualityGate:
+          fetch_materials: false
+          keep_artifacts: false
+          clean_workspace: false
+          jobs:
+            - quality-gate:
+                command: |
+                  def qg = waitForQualityGate()
+                  sh "echo ${qg.status}"
+                  if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                  }

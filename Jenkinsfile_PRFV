@@ -41,7 +41,7 @@ pipeline {
             }
         }
         stage('Quality gate') {
-            
+
             steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
@@ -54,6 +54,7 @@ pipeline {
               }
             }
         }
+    }
         stage('Package') {
            // when { expression { params.skip_test != true } }
             steps {
