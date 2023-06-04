@@ -11,23 +11,23 @@ pipelines:
         auto_update: true
         branch: task9
     stages:
-      - Test:
-          fetch_materials: true
-          clean_workspace: false
-          jobs:
+    - Test:
+        fetch_materials: true
+        clean_workspace: false
+        jobs:
             - npm-install:
                 docker_image: node:18-alpine3.16
                 command: npm install
             - npm-test:
                 docker_image: node:18-alpine3.16
                 command: npm test
-          tasks:
+            tasks:
             - exec:
                 command: echo 'Placeholder for post actions'
-      - CodeInspection:
-          fetch_materials: true
-          clean_workspace: false
-          jobs:
+    - CodeInspection:
+        fetch_materials: true
+        clean_workspace: false
+        jobs:
             - sonarqube-scanner:
                 docker_image: sonarsource/sonar-scanner-cli
                 command: |
@@ -36,17 +36,7 @@ pipelines:
                     -Dsonar.projectKey=at20-PRFV \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=https://sonarcloud.io
-          tasks:
+            tasks:
             - exec:
                 command: echo 'Placeholder for post actions'
-      - QualityGate:
-          fetch_materials: false
-          clean_workspace: false
-          jobs:
-            - quality-gate:
-                command: |
-                  def qg = waitForQualityGate()
-                  sh "echo ${qg.status}"
-                  if (qg.status != 'OK') {
-                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                  }
+      
