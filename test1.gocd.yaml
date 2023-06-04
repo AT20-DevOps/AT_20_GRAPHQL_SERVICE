@@ -1,42 +1,56 @@
 format_version: 10
 pipelines:
-  test1:
+  Test1:
     group: AT20Group
-    label_template: '${COUNT}'
+    label_template: ${COUNT}
     lock_behavior: none
+    display_order: -1
     materials:
-      git-8387a00:
+      git-91ca77d:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
+        username: vcarmen
         shallow_clone: false
         auto_update: true
         branch: task9
     stages:
     - Test:
         fetch_materials: true
+        keep_artifacts: false
         clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
         jobs:
-            - npm-install:
-                docker_image: node:18-alpine3.16
-                command: npm install
-            - npm-test:
-                docker_image: node:18-alpine3.16
-                command: npm test
+          unit-test:
+            timeout: 0
             tasks:
             - exec:
-                command: echo 'Placeholder for post actions'
-    - CodeInspection:
+                arguments:
+                - hello
+                - world
+                command: echo
+                run_if: passed
+          code_coverage:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -la
+                command: ls
+                run_if: passed
+    - code-inspection:
         fetch_materials: true
+        keep_artifacts: false
         clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
         jobs:
-            - sonarqube-scanner:
-                docker_image: sonarsource/sonar-scanner-cli
-                command: |
-                  sonar-scanner \
-                    -Dsonar.organization=at20-graphql \
-                    -Dsonar.projectKey=at20-PRFV \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=https://sonarcloud.io
+          sonar:
+            timeout: 0
             tasks:
             - exec:
-                command: echo 'Placeholder for post actions'
-      
+                arguments:
+                - sonar-scanner command here
+                command: echo
+                run_if: passed
