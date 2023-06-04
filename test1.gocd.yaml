@@ -12,10 +12,13 @@ pipelines:
         auto_update: true
         branch: task9
     stages:
+    - stage1: Test
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
-      - name: Test
+        approval:
+          type: success
+          allow_only_on_success: false
         jobs:
           - name: RunTests
             tasks:
@@ -27,7 +30,7 @@ pipelines:
               - tests/report.html
               - test/jest-html-reporters-attach/*
 
-      - name: CodeInspection
+    - stage2: CodeInspection
         jobs:
           - name: RunCodeInspection
             tasks:
