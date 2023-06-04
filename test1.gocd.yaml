@@ -1,11 +1,9 @@
 format_version: 10
-
 pipelines:
   test1:
     group: AT20Group
-    label_template: ${COUNT}
+    label_template: '${COUNT}'
     lock_behavior: none
-    display_order: -1
     materials:
       git-8387a00:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
@@ -15,7 +13,6 @@ pipelines:
     stages:
       - Test:
           fetch_materials: true
-          keep_artifacts: false
           clean_workspace: false
           jobs:
             - npm-install:
@@ -29,7 +26,6 @@ pipelines:
                 command: echo 'Placeholder for post actions'
       - CodeInspection:
           fetch_materials: true
-          keep_artifacts: false
           clean_workspace: false
           jobs:
             - sonarqube-scanner:
@@ -45,7 +41,6 @@ pipelines:
                 command: echo 'Placeholder for post actions'
       - QualityGate:
           fetch_materials: false
-          keep_artifacts: false
           clean_workspace: false
           jobs:
             - quality-gate:
