@@ -81,6 +81,7 @@ pipeline {
             steps {
                 sh 'echo ${GIT_COMMIT_HASH}'
                 sh 'echo ${TAG_VERSION}'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
                 sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
         }
