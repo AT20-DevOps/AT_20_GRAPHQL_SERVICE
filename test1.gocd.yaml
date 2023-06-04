@@ -1,0 +1,37 @@
+format_version: 10
+
+pipelines:
+  test1:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git-8387a00:
+        git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
+        shallow_clone: false
+        auto_update: true
+        branch: task9
+    stages:
+      - name: Test
+        jobs:
+          - name: RunTests
+            tasks:
+              - exec:
+                  command: npm install
+              - exec:
+                  command: npm test
+            artifacts:
+              - tests/report.html
+              - test/jest-html-reporters-attach/*
+
+      - name: CodeInspection
+        jobs:
+          - name: RunCodeInspection
+            tasks:
+              - exec:
+                  command: sonar-scanner \
+                            -Dsonar.organization=at20-graphql \
+                            -Dsonar.projectKey=at20-PRFV \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=https://sonarcloud.io

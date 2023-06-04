@@ -26,7 +26,7 @@ pipeline {
             }
         }
         stage('CodeInspection') {
-            when { expression { params.skip_stage != true } }
+
             agent {
                 docker 'sonarsource/sonar-scanner-cli'
             }
@@ -41,7 +41,7 @@ pipeline {
             }
         }
         stage('Quality gate') {
-            when { expression { params.skip_stage != true } }
+            
             steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
@@ -73,7 +73,7 @@ pipeline {
         stage('Deploytodev') {
             steps {
                 //sh 'docker compose -f docker-compose.prfv.yml up -d'
-                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yml up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yaml up -d'
             }
         }
         stage('DeployAuto') {
