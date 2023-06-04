@@ -59,5 +59,15 @@ pipeline {
             }
 
         }
+        stage('Deploytodev') {
+            steps {
+                sh 'DOCKER_HOST=ssh://192.168.33.61 docker-compose -f docker-compose.wjvq.yaml up -d'
+            }
+        }
+    }
+    post {
+        always {
+            sh 'docker rmi $(docker images -f "dangling=true" -q)'
+        }
     }
 }
