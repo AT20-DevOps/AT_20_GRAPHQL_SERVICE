@@ -3,6 +3,9 @@ pipeline {
     environment{
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
+        TARGET_HOST ='192.168.56.61'
+        TAG_VERSION = sh (script: "git rev-parse --short HEAD", returnStdout: true)
+        GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true)
     }
     stages {
         stage('Test') {
@@ -48,20 +51,26 @@ pipeline {
         }
         stage('Package'){
             steps {
+                sh 'echo %GIT_COMMIT%'
                 sh 'docker build -t graphql-service-wjvq .'
             }
         }
         stage('Publish'){
             steps {
                 sh 'docker login -u willvq -p $DOCKER_PASS'
-                sh 'docker tag graphql-service-wjvq willvq/graphql'
-                sh 'docker push willvq/graphql'
+                sh 'docker tag graphql-service-wjvq willvq/graphql::${GIT_COMMIT_HASH}'
+                sh 'docker push willvq/graphql:${GIT_COMMIT_HASH}'
             }
 
         }
         stage('Deploytodev') {
             steps {
-                sh 'DOCKER_HOST=ssh://192.168.33.61 docker-compose -f docker-compose.wjvq.yaml up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.wjvq.yaml up -d'
+            }
+        }
+        stage('DeployAuto') {
+            steps {
+               sh 'DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.wjvq.yaml up -d'
             }
         }
     }

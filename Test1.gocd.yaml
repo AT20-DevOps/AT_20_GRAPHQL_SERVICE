@@ -1,0 +1,55 @@
+format_version: 10
+pipelines:
+  Test1:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git-3705b1f:
+        git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
+        shallow_clone: false
+        auto_update: true
+        branch: develop
+    stages:
+    - Test:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          unit-test:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - hello
+                - world
+                command: echo
+                run_if: passed
+          code_coverage:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -la
+                command: ls
+                run_if: passed
+    - code-inspection:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          sonar:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - sonar-scanner comand h
+                command: echo
+                run_if: passed
