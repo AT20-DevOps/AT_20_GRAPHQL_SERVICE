@@ -1,7 +1,7 @@
 format_version: 10
 pipelines:
-  Test1:
-    group: defaultGroup
+  Testwjvq:
+    group: AT20_Graphql
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
@@ -25,9 +25,9 @@ pipelines:
             tasks:
             - exec:
                 arguments:
-                - hello
-                - world
-                command: echo
+                - pull
+                - node:18-alpine3.16
+                command: docker
                 run_if: passed
           code_coverage:
             timeout: 0
