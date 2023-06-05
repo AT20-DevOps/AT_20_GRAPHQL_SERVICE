@@ -25,8 +25,8 @@ pipelines:
             tasks:
             - exec:
                 arguments:
-                - install
-                command: npm
+                - pull node:18
+                command: docker
             - exec:
                 arguments:
                 - --version
