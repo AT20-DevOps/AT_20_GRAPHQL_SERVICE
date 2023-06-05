@@ -24,11 +24,13 @@ pipelines:
             timeout: 0
             tasks:
             - exec:
-                command:
-                - "npm install"
+                arguments:
+                - install
+                command: npm
             - exec:
-                command:
-                - "npm test"
+                arguments:
+                - --version
+                command: npm
     - code-inspection:
         fetch_materials: true
         keep_artifacts: false
