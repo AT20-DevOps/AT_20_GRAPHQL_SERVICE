@@ -32,6 +32,9 @@ pipelines:
                 npm run test tests/
             artifacts:
             - Test:
+                source: tests/result.js
+                destination: js_report
+             - Buils:
                 source: tests/report.html
                 destination: html_report
     - Code-inspection:
