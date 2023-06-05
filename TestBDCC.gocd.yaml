@@ -25,7 +25,7 @@ pipelines:
           unit-test:
             timeout: 0
             resources: 
-            - alpine
+            - ubuntu
             tasks:
             - script: |
                 npm install
