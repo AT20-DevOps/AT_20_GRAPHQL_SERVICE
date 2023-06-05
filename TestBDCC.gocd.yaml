@@ -24,13 +24,16 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources: 
+            - ubuntu
             tasks:
             - exec:
                 arguments:
-                - hello
-                - world
-                command: echo
+                - -v
+                command: node
                 run_if: passed
+            - script: 
+
           code-coverage:
             timeout: 0
             tasks:
