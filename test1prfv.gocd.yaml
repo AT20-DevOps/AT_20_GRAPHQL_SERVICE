@@ -11,7 +11,7 @@ pipelines:
         username: vcarmen
         shallow_clone: false
         auto_update: true
-        branch: task10
+        branch: task10_prfv
     stages:
     - Test:
         fetch_materials: true
