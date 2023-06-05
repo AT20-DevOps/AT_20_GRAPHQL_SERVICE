@@ -31,7 +31,7 @@ pipelines:
                 npm test
             artifacts:
             - build:
-                source: tests/report.html, test/jest-html-reporters-attach/*
+                source: tests/report.html
                 destination: html_report
           code_coverage:
             timeout: 0
