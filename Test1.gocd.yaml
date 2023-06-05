@@ -23,9 +23,12 @@ pipelines:
           unit-test:
             timeout: 0
             tasks:
-            - script: |
-                apt-get install nodejs
-                npm --version
+            - exec:
+                  command:
+                    - "npm install"
+              - exec:
+                  command:
+                    - "npm test"
     - code-inspection:
         fetch_materials: true
         keep_artifacts: false
