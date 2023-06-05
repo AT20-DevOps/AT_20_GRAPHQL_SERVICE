@@ -23,12 +23,14 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources:
+            - ubuntu
             tasks:
             - exec:
                 arguments:
-                - hello
-                - world
-                command: echo
+                - install
+                - test
+                command: npm
                 run_if: passed
           code_coverage:
             timeout: 0
