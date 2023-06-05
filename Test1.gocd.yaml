@@ -24,8 +24,8 @@ pipelines:
             timeout: 0
             tasks:
             - script: |
-              sudo apt update
-              sudo apt install nodejs npm
+              curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+              sudo apt install nodejs
           code_coverage:
             timeout: 0
             tasks:
