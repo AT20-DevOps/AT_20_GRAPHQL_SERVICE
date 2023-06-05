@@ -1,7 +1,7 @@
 format_version: 10
 pipelines:
-  Testwjvq:
-    group: AT20_Graph
+  Test1:
+    group: AT20_Graphql
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
@@ -25,12 +25,23 @@ pipelines:
             tasks:
             - exec:
                 arguments:
-                - pull node:18
+                - pull
+                - node:18
                 command: docker
+                run_if: passed
             - exec:
                 arguments:
                 - --version
                 command: npm
+                run_if: passed
+          code_coverage:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -la
+                command: ls
+                run_if: passed
     - code-inspection:
         fetch_materials: true
         keep_artifacts: false
