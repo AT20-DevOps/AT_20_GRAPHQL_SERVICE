@@ -1,12 +1,18 @@
 pipeline {
     agent any
+     parameters {
+        booleanParam(name: 'skip_stage', defaultValue: true, description: 'Set to true to skip stage')
+    }
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
-        TARGET_HOST = '192.168.56.70'
+        TARGET_HOST ='192.168.56.70'
+        TAG_VERSION=sh (script: "git rev-parse --short HEAD", returnStdout: true)
+        GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true)
     }
     stages {
         stage('Test') {
+            //when { expression { params.skip_stage != true } }
             agent {
                 docker {
                     image 'node:18-alpine3.16'
@@ -23,6 +29,7 @@ pipeline {
                     }
                 }
         stage('Code inspection') {
+            //when { expression { params.skip_stage != true } }
             steps {
                 withSonarQubeEnv('sonar_scanner') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
@@ -36,7 +43,8 @@ pipeline {
         }
         
         stage('Quality gate') {
-           steps {
+            //when { expression { params.skip_stage != true } }
+            steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
                     def qg = waitForQualityGate()
@@ -54,18 +62,34 @@ pipeline {
                 }
             }
         stage('Publish'){
+            //when { expression { params.skip_stage != true } }
             steps{
                 sh 'docker login -u bdcc10 -p ${DOCKER_PASS}'
-                sh 'docker tag graphql_service bdcc10/bdcc-at20_graphql_service'
-                sh 'docker push bdcc10/bdcc-at20_graphql_service'
+                sh 'docker tag graphql_service bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}'
+                sh 'docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}'
 
                 }
             }
+        stage ("Wait-for-DockerHub") {
+            steps{
+                echo 'Waiting 10 seconds to allow docker hub to update'
+                sleep(time:10,unit:"SECONDS")
+            }
+         
+            }
         stage ('DeployToDev') {
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+                sh 'echo ${GIT_COMMIT_HASH}'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
+                sh 'echo ${TAG_VERSION}'
+                sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
-
+        }
+         stage ('DeployToAuto') {
+            when { expression { params.skip_stage != true } }
+            steps {
+                sh 'DOCKER_HOST=ssh://${TARGET_HOST} docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+            }
         }
     }
 

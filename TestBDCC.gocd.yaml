@@ -1,0 +1,153 @@
+format_version: 10
+pipelines:
+  Test1:
+    group: AT20Group
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git-8f5d37d:
+        git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
+        username: bdcol
+        shallow_clone: false
+        auto_update: true
+        branch: develop
+        encrypted_password: AES:sNvzGsapD3HmbyDbsQeSnA==:+qIF5hTOaAjVstE1Bgs35A==
+    stages:
+    - Test:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          unit-test:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - hello
+                - world
+                command: echo
+                run_if: passed
+          code-coverage:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - -la
+                command: ls
+                run_if: passed
+    - Code-inspection:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          Sonar:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - sonar scanner command
+                command: echo
+                run_if: passed
+    - Quality-gate:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          wait-For-Quality-Gate:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is the quality gate stage
+                command: echo
+                run_if: passed
+    - Package:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          Build-the-service:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is the command to build the docker image
+                command: echo
+                run_if: passed
+    - Publish:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          Login-to-docker:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is a command to login to docker using the given credentials
+                command: echo
+                run_if: passed
+          Create-the-tag-for-the-service:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is a command to tag the service that will be pushed
+                command: echo
+                run_if: passed
+          Push-the-service:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is a command to push the new version of the service
+                command: echo
+                run_if: passed
+    - Deploy-to-Dev:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          Deploy:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is a command to deploy the service to the Dev area
+                command: echo
+                run_if: passed
+    - Deploy-to-Auto:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          Deploy-Auto:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - This is a command for automatic deployment
+                command: echo
+                run_if: passed
