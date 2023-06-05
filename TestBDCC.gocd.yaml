@@ -27,13 +27,9 @@ pipelines:
             resources: 
             - ubuntu
             tasks:
-            - exec:
-                arguments:
-                - -v
-                command: node
-                run_if: passed
-            - script: 
-
+            - script: |
+                node -v
+               
           code-coverage:
             timeout: 0
             tasks:
