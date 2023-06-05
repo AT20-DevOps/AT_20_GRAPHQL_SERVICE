@@ -5,7 +5,7 @@ services:
     env_file:
       -  .env
     container_name: $USER_SERVICE_NAME
-    image: pprfv/pprfv:${TAG_VERSION}
+    image: willvq/graphql:${TAG_VERSION}
     ports:
       - $USER_SERVICE_EXPOSE_PORT:$USER_SERVICE_PORT
     expose:
