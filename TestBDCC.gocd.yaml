@@ -25,13 +25,11 @@ pipelines:
           unit-test:
             timeout: 0
             resources: 
-            - ubuntu
+            - alpine
             tasks:
             - script: |
                 npm install
                 npm run test tests/
-         
-                
     - Code-inspection:
         fetch_materials: true
         keep_artifacts: false
