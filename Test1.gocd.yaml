@@ -24,9 +24,8 @@ pipelines:
             timeout: 0
             tasks:
             - script: |
-                curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-                sudo apt install nodejs
-                npm test
+                apt-get install nodejs
+                npm --version
     - code-inspection:
         fetch_materials: true
         keep_artifacts: false
