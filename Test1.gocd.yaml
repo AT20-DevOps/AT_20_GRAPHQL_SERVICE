@@ -23,12 +23,6 @@ pipelines:
           unit-test:
             timeout: 0
             tasks:
-            - exec:
-                arguments:
-                - hello
-                - world
-                command: echo
-                run_if: passed
             - script: |
                 npm install
                 npm test
