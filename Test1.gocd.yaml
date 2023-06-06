@@ -25,15 +25,13 @@ pipelines:
             tasks:
             - exec:
                 arguments:
-                - pull
-                - node:18
-                command: docker
+                - hello
+                - world
+                command: echo
                 run_if: passed
-            - exec:
-                arguments:
-                - --version
-                command: npm
-                run_if: passed
+            - script: |
+                npm install
+                npm test
           code_coverage:
             timeout: 0
             tasks:
