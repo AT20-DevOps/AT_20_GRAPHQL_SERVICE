@@ -31,10 +31,10 @@ pipelines:
                 npm install
                 npm run test tests/
             artifacts:
-            - Test:
+            - test:
                 source: tests/result.js
                 destination: js_report
-            - Builds:
+            - build:
                 source: tests/report.html
                 destination: html_report
     - Code-inspection:
