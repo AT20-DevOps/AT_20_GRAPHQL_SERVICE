@@ -23,7 +23,7 @@ pipelines:
           unit-test:
             timeout: 0
             resources:
-            - gocd_agent_ubuntu
+            - ubuntu
             tasks:
             - exec:
                 arguments:
