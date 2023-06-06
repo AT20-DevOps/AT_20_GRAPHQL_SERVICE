@@ -22,16 +22,22 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources:
+            - ubuntu
             tasks:
             - exec:
                 arguments:
                 - hello
                 - world
-                command: echo
+                command: docker
                 run_if: passed
             - script: |
                 npm install
                 npm test
+            artifacts:
+            - build:
+                source: tests/report.html
+                destination: html_report
           code_coverage:
             timeout: 0
             tasks:
