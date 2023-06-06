@@ -108,14 +108,14 @@ pipelines:
             - docker
             tasks:
             - script: |
-                echo docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
+                docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
           Push-the-service:
             timeout: 0
             resources: 
             - docker
             tasks:
             - script: |
-                echo docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
+                docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
     - Deploy-to-Dev:
         fetch_materials: true
         keep_artifacts: false
