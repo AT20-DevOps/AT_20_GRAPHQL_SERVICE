@@ -34,7 +34,7 @@ pipelines:
             - Test:
                 source: tests/result.js
                 destination: js_report
-             - Buils:
+            - Builds:
                 source: tests/report.html
                 destination: html_report
     - Code-inspection:
