@@ -58,12 +58,6 @@ pipelines:
             resources:
             - ubuntu
             tasks:
-            - fetch:
-                is_file: false
-                source: build
-                stage: Test
-                job: unit-test
-                run_if: passed
             - script: |
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner  -Dsonar.organization=at20-graphql -Dsonar.projectKey=at20-PRFV -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io'
