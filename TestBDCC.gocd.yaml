@@ -52,12 +52,6 @@ pipelines:
             resources: 
             - ubuntu
             tasks:
-            - fetch:
-                is_file: false
-                source: tests/report.html 
-                stage: Test
-                job: unit-test
-                run_if: passed
             - script: |
                 ls -la
                 echo sonar-scanner -Dsonar.organization=at20-bdcc -Dsonar.projectKey=at20-bdcc_at20-devops -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io'
@@ -114,14 +108,14 @@ pipelines:
             - docker
             tasks:
             - script: |
-                echo docker tag graphql_serviceGO bdcc10/bdcc-at20_graphql_service:GO
+                echo docker tag graphql_serviceGO bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
           Push-the-service:
             timeout: 0
             resources: 
             - docker
             tasks:
             - script: |
-                echo docker push bdcc10/bdcc-at20_graphql_service:GO
+                echo docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
     - Deploy-to-Dev:
         fetch_materials: true
         keep_artifacts: false
