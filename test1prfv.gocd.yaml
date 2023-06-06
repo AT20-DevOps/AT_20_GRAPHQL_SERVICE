@@ -1,6 +1,6 @@
 format_version: 10
 pipelines:
-  Test1:
+  Test1_PRFV:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -11,7 +11,7 @@ pipelines:
         username: prfv
         shallow_clone: false
         auto_update: true
-        branch: task10_prfv
+        branch: task11_prfv
     stages:
     - Test:
         fetch_materials: true
