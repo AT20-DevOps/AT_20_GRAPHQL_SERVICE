@@ -1,7 +1,7 @@
 format_version: 10
 pipelines:
   Test1:
-    group: defaultGroup
+    group: AT20_Graphql
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
@@ -10,7 +10,7 @@ pipelines:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         shallow_clone: false
         auto_update: true
-        branch: develop
+        branch: task10_wjvq
     stages:
     - Test:
         fetch_materials: true
@@ -23,12 +23,13 @@ pipelines:
           unit-test:
             timeout: 0
             tasks:
-            - exec:
-                arguments:
-                - hello
-                - world
-                command: echo
-                run_if: passed
+            - script: |
+                npm install
+                npm test
+            artifacts:
+            - build:
+                source: tests/report.html
+                destination: html_report
           code_coverage:
             timeout: 0
             tasks:
