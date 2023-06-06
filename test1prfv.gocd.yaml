@@ -9,7 +9,7 @@ pipelines:
       GIT_COMMIT_HASH: 1.2
     secure_variables:
       SONAR_TOKEN: AES:xnVn4V0VRSLmeCg0brgFVw==:TcR5TV9NLSahvX7x8XdGgo9ZN6y4+j83KWK1EqGxFitaZpMM6t6Sal89EtTZc2SS
-
+      DOCKER_PASS: AES:fCtSAljmKxE6i1x2JJ2GYw==:bXqOZCLb4FL9N74jGYhdyA==
     materials:
       git-91ca77d:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
@@ -62,3 +62,23 @@ pipelines:
             - script: |
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20-graphql -Dsonar.projectKey=at20-PRFV -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
+    - PackageAndPublish:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          sonar:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                docker build -t at20_graphql .
+                docker login -u pprfv -p ${DOCKER_PASS}
+                docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}
+                docker push pprfv/pprfv:${GIT_COMMIT_HASH}
+
+
