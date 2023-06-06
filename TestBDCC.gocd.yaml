@@ -1,6 +1,6 @@
 format_version: 10
 pipelines:
-  Test1:
+  Task10:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -24,21 +24,19 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources: 
+            - ubuntu
             tasks:
-            - exec:
-                arguments:
-                - hello
-                - world
-                command: echo
-                run_if: passed
-          code-coverage:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - -la
-                command: ls
-                run_if: passed
+            - script: |
+                npm install
+                npm run test tests/
+            artifacts:
+            - Test:
+                source: tests/result.js
+                destination: js_report
+             - Buils:
+                source: tests/report.html
+                destination: html_report
     - Code-inspection:
         fetch_materials: true
         keep_artifacts: false
