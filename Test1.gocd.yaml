@@ -26,6 +26,8 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources:
+            - node
             tasks:
             - script: |
                 npm install
@@ -52,6 +54,8 @@ pipelines:
         jobs:
           sonar:
             timeout: 0
+            resources:
+            - node
             tasks:
             - script: |
                 ls -la
