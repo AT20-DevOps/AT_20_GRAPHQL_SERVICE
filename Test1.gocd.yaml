@@ -14,7 +14,7 @@ pipelines:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         shallow_clone: false
         auto_update: true
-        branch: task10_wjvq
+        branch: task11_wjvq
     stages:
     - Test:
         fetch_materials: true
