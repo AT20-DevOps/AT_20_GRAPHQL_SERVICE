@@ -11,7 +11,7 @@ pipelines:
         username: bdcol
         shallow_clone: false
         auto_update: true
-        branch: develop
+        branch: task11_bdcc
         encrypted_password: AES:sNvzGsapD3HmbyDbsQeSnA==:+qIF5hTOaAjVstE1Bgs35A==
     stages:
     - Test:
