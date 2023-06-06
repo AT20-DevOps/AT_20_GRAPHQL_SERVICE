@@ -8,7 +8,7 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     secure_variables: 
-      SONAR_TOKEN: AES:XVEJ7dezT7ZVOh4eCQavsw==:yd4P/XY9qPgOPn+Sdhy1qQ==
+      SONAR_TOKEN: AES:2aHvr6iTjTxDXMzr0KkRVA==:TPvsCXHWgOZQLQzOgPUzUCHBeJH2ylpd2ulPflj2X9em485+QQXeMP9Sng0YgE+w
       
     materials:
       git-8f5d37d:
