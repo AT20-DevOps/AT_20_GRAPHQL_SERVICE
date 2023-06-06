@@ -27,7 +27,7 @@ pipelines:
                 arguments:
                 - hello
                 - world
-                command: docker
+                command: echo
                 run_if: passed
             - script: |
                 npm install
