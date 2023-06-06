@@ -9,7 +9,7 @@ pipelines:
       GIT_COMMIT_HASH: 1.2
     secure_variables: 
       SONAR_TOKEN: AES:2aHvr6iTjTxDXMzr0KkRVA==:TPvsCXHWgOZQLQzOgPUzUCHBeJH2ylpd2ulPflj2X9em485+QQXeMP9Sng0YgE+w
-      DOCKER_TOKEN: AES:TEq5p3C67WEMknds0iOAaw==:kH+9G1dDoVRq2j4fYm+dsw==
+      DOCKER_PASS: AES:TEq5p3C67WEMknds0iOAaw==:kH+9G1dDoVRq2j4fYm+dsw==
     materials:
       git-8f5d37d:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
@@ -101,7 +101,7 @@ pipelines:
             - docker
             tasks:
             - script: |
-                echo docker login -u bdcc10 -p ${DOCKER_PASS}
+                docker login -u bdcc10 -p ${DOCKER_PASS}
           Create-the-tag-for-the-service:
             timeout: 0
             resources: 
