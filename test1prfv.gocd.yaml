@@ -8,10 +8,10 @@ pipelines:
     materials:
       git-91ca77d:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
-        username: vcarmen
+        username: prfv
         shallow_clone: false
         auto_update: true
-        branch: task9
+        branch: task10_prfv
     stages:
     - Test:
         fetch_materials: true
@@ -23,13 +23,16 @@ pipelines:
         jobs:
           unit-test:
             timeout: 0
+            resources:
+            - ubuntu
             tasks:
-            - exec:
-                arguments:
-                - hello
-                - world
-                command: echo
-                run_if: passed
+            - script: |
+                npm install
+                npm test
+            artifacts:
+            - build:
+                source: tests/report.html
+                destination: html_report
           code_coverage:
             timeout: 0
             tasks:
