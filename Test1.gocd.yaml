@@ -23,7 +23,7 @@ pipelines:
           unit-test:
             timeout: 0
             resources:
-            - ubuntu
+            - b4bc73cdd701
             tasks:
             - exec:
                 arguments:
