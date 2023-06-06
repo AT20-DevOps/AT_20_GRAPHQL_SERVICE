@@ -42,7 +42,7 @@ pipelines:
                 command: ls
                 run_if: passed
     - code-inspection:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -51,9 +51,16 @@ pipelines:
         jobs:
           sonar:
             timeout: 0
+            resources:
+            - ubuntu
             tasks:
-            - exec:
-                arguments:
-                - sonar-scanner command here
-                command: echo
+            - fetch:
+                is_file: false
+                source: build
+                stage: Test
+                job: unit-test
                 run_if: passed
+            - script: |
+                ls -la
+                /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner  -Dsonar.organization=at20-devops   -Dsonar.projectKey=at20cv   -Dsonar.sources=.   -Dsonar.host.url=https://sonarcloud.io -Dsonar.java.binaries=build
+  
