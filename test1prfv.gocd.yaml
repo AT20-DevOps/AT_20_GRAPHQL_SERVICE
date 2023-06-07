@@ -39,8 +39,6 @@ pipelines:
                 source: tests/report.html
                 destination: html_report
             - build:
-                source: Dockerfile
-            - build :
                 source: docker-compose.prfv.yaml
           code_coverage:
             timeout: 0
