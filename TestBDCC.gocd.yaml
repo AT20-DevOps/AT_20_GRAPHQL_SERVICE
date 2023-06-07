@@ -39,8 +39,12 @@ pipelines:
             - build:
                 source: tests/report.html
                 destination: html_report
+            - build: 
+                source: Dockerfile
+            - build:
+                source: docker-compose.dev.bdcc.yaml
     - Code-inspection:
-        fetch_materials: false
+        fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -77,8 +81,8 @@ pipelines:
             artifacts:
               - build:
                   source: docker-compose.yaml
-    
- SmokeTest:
+           
+  SmokeTest:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
