@@ -127,8 +127,7 @@ pipelines:
             - script: |
                 echo deploy here
                 ls -la
-                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose up -d
-    - Smoke:
+     - Smoke:
         fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
