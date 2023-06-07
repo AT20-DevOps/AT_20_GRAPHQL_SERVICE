@@ -83,8 +83,10 @@ pipelines:
             artifacts:
               - build:
                   source: docker-compose.dev.bdcc.yaml
+              - build: 
+                  source: .env
            
-  SmokeTest:
+  Deploy:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -116,9 +118,17 @@ pipelines:
                 source: docker-compose.dev.bdcc.yaml
                 is_file: true
                 run_if: passed
+            - fetch: 
+                pipeline: Test
+                stage: PackageAndPublish
+                job: Login-and-Push
+                source: .env
+                is_file: true
+                run_if: passed
             - script: |
                 echo deploy here
                 ls -la
+                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.dev.bdcc.yaml up -d
            
         
  
