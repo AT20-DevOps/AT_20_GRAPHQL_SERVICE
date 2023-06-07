@@ -104,7 +104,7 @@ pipelines:
           type: success
           allow_only_on_success: false
         jobs:
-          Deploy-to-Dev:
+          deploy-to-Dev:
             timeout: 0
             resources: 
             - docker
@@ -112,7 +112,7 @@ pipelines:
             - fetch: 
                 pipeline: Test
                 stage: PackageAndPublish
-                job: docker
+                job: Login-and-Push
                 source: docker-compose.dev.bdcc.yaml
                 is_file: true
                 run_if: passed
