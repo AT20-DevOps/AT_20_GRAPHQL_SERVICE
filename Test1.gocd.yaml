@@ -64,7 +64,7 @@ pipelines:
           unit-test:
             timeout: 0
             resources:
-            - node
+            - docker
             tasks:
             - script: |
                 ls -la
