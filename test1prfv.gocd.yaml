@@ -81,8 +81,9 @@ pipelines:
                 docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}
                 docker push pprfv/pprfv:${GIT_COMMIT_HASH}
             artifacts:
-              source: docker-compose.prfv.yaml
-  
+            - build:
+                source: docker-compose.prfv.yaml
+
   # Pull the images needed in the docker-compose.yaml
   # Deploy in dev
   # Run the test
