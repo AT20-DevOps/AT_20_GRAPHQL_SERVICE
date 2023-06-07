@@ -111,7 +111,7 @@ pipelines:
                 pipeline: Test
                 stage: PackageAndPublish
                 job: docker
-                source: docker-compose.yaml
+                source: docker-compose.dev.bdcc.yaml
                 is_file: false
                 run_if: passed
             - script: |
