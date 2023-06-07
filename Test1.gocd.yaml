@@ -36,14 +36,6 @@ pipelines:
             - build:
                 source: tests/report.html
                 destination: html_report
-          code_coverage:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - -la
-                command: ls
-                run_if: passed
     - code-inspection:
         fetch_materials: true
         keep_artifacts: false
