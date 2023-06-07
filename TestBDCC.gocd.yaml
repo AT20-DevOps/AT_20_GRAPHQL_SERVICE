@@ -75,7 +75,8 @@ pipelines:
                 docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
                 docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
             artifacts:
-              source: docker-compose.yaml
+              - build:
+                  source: docker-compose.yaml
     
  SmokeTest:
     group: AT20Group
