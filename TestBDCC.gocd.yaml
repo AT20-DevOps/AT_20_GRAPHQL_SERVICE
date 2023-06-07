@@ -42,7 +42,7 @@ pipelines:
             - build: 
                 source: Dockerfile
             - build:
-                source: docker-compose.dev.bdcc.yaml
+                source: docker-compose.yaml
     - Code-inspection:
         fetch_materials: true
         keep_artifacts: false
@@ -80,7 +80,7 @@ pipelines:
                 docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
             artifacts:
               - build:
-                  source: docker-compose.dev.bdcc.yaml
+                  source: docker-compose.yaml
            
   SmokeTest:
     group: AT20Group
@@ -111,7 +111,7 @@ pipelines:
                 pipeline: Test
                 stage: PackageAndPublish
                 job: docker
-                source: docker-compose.dev.bdcc.yaml
+                source: docker-compose.yaml
                 is_file: false
                 run_if: passed
             - script: |
