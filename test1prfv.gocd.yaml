@@ -93,7 +93,8 @@ pipelines:
             artifacts:
             - build:
                 source: docker-compose.prfv.yaml
-  SmokeTest:
+
+  Acceptance:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -101,7 +102,7 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
-      Test1_PRFV:
+      Test1:
         pipeline: Test1_PRFV
         stage: PackageAndPublish
     stages:
@@ -113,18 +114,18 @@ pipelines:
           type: success
           allow_only_on_success: false
         jobs:
-          DeployDev:
+          deployToDev:
             timeout: 0
             resources:
             - docker
             tasks:
             - fetch:
-              pipeline: Test1_PRFV
-              stage: PackageAndPublish
-              job: PackageAndPublish
-              source: docker-compose.prfv.yaml
-              is_file: true
-              run_if: passed
+                pipeline: Test1_PRFV
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: docker-compose.prfv.yaml
+                is_file: true
+                run_if: passed
             - script: |
                 echo deploy here
                 ls -la
