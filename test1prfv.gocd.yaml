@@ -63,7 +63,7 @@ pipelines:
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20-graphql -Dsonar.projectKey=at20-PRFV -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
     - PackageAndPublish:
-        fetch_materials: false
+        fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -80,5 +80,9 @@ pipelines:
                 docker login -u pprfv -p ${DOCKER_PASS}
                 docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}
                 docker push pprfv/pprfv:${GIT_COMMIT_HASH}
-
-
+            artifacts:
+              source: docker-compose.prfv.yaml
+  
+  # Pull the images needed in the docker-compose.yaml
+  # Deploy in dev
+  # Run the test
