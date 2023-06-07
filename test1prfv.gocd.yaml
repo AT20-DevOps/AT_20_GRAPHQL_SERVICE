@@ -82,7 +82,7 @@ pipelines:
             - fetch:
                 is_file: true
                 source: docker-compose.prfv.yaml
-                stage: Test1_PRFV
+                stage: Test
                 job: unit-test
                 run_if: passed
             - script: |
@@ -102,7 +102,7 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
-      Test1:
+      Test1_PRFV:
         pipeline: Test1_PRFV
         stage: PackageAndPublish
     stages:
