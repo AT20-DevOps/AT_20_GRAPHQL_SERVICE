@@ -80,7 +80,7 @@ pipelines:
                 docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
             artifacts:
               - build:
-                  source: docker-compose.yaml
+                  source: docker-compose.dev.bdcc.yaml
            
   SmokeTest:
     group: AT20Group
