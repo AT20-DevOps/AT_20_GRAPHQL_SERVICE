@@ -71,8 +71,8 @@ pipelines:
                 arguments:
                 - This is the quality gate stage
                 command: echo
-                run_if: passed
-    - Package:
+                run_if: passed           
+    - PackageAndPublish:
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
@@ -80,42 +80,17 @@ pipelines:
           type: success
           allow_only_on_success: false
         jobs:
-          Build-the-service:
+          Login-and-Push:
             timeout: 0
             resources: 
             - docker
             tasks:
             - script: |
                 docker build -t graphql_servicego .
-    - Publish:
-        fetch_materials: true
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          Login-to-docker:
-            timeout: 0
-            resources: 
-            - docker
-            tasks:
-            - script: |
                 docker login -u bdcc10 -p ${DOCKER_PASS}
-          Create-the-tag-for-the-service:
-            timeout: 0
-            resources: 
-            - docker
-            tasks:
-            - script: |
                 docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
-          Push-the-service:
-            timeout: 0
-            resources: 
-            - docker
-            tasks:
-            - script: |
                 docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
+
     - Deploy-to-Dev:
         fetch_materials: true
         keep_artifacts: false
