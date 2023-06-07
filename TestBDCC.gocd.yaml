@@ -1,17 +1,22 @@
 format_version: 10
 pipelines:
-  Task10:
+  Task11:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    secure_variables: 
+      SONAR_TOKEN: AES:2aHvr6iTjTxDXMzr0KkRVA==:TPvsCXHWgOZQLQzOgPUzUCHBeJH2ylpd2ulPflj2X9em485+QQXeMP9Sng0YgE+w
+      DOCKER_PASS: AES:TEq5p3C67WEMknds0iOAaw==:kH+9G1dDoVRq2j4fYm+dsw==
     materials:
       git-8f5d37d:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         username: bdcol
         shallow_clone: false
         auto_update: true
-        branch: develop
+        branch: task11_bdcc
         encrypted_password: AES:sNvzGsapD3HmbyDbsQeSnA==:+qIF5hTOaAjVstE1Bgs35A==
     stages:
     - Test:
@@ -31,14 +36,11 @@ pipelines:
                 npm install
                 npm run test tests/
             artifacts:
-            - Test:
-                source: tests/result.js
-                destination: js_report
-             - Buils:
+            - build:
                 source: tests/report.html
                 destination: html_report
     - Code-inspection:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -47,12 +49,13 @@ pipelines:
         jobs:
           Sonar:
             timeout: 0
+            resources: 
+            - ubuntu
             tasks:
-            - exec:
-                arguments:
-                - sonar scanner command
-                command: echo
-                run_if: passed
+            - script: |
+                ls -la
+                /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20-bdcc -Dsonar.projectKey=at20-bdcc_at20-devops -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
+
     - Quality-gate:
         fetch_materials: true
         keep_artifacts: false
@@ -68,8 +71,8 @@ pipelines:
                 arguments:
                 - This is the quality gate stage
                 command: echo
-                run_if: passed
-    - Package:
+                run_if: passed           
+    - PackageAndPublish:
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
@@ -77,46 +80,17 @@ pipelines:
           type: success
           allow_only_on_success: false
         jobs:
-          Build-the-service:
+          Login-and-Push:
             timeout: 0
+            resources: 
+            - docker
             tasks:
-            - exec:
-                arguments:
-                - This is the command to build the docker image
-                command: echo
-                run_if: passed
-    - Publish:
-        fetch_materials: true
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          Login-to-docker:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - This is a command to login to docker using the given credentials
-                command: echo
-                run_if: passed
-          Create-the-tag-for-the-service:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - This is a command to tag the service that will be pushed
-                command: echo
-                run_if: passed
-          Push-the-service:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - This is a command to push the new version of the service
-                command: echo
-                run_if: passed
+            - script: |
+                docker build -t graphql_servicego .
+                docker login -u bdcc10 -p ${DOCKER_PASS}
+                docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
+                docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
+
     - Deploy-to-Dev:
         fetch_materials: true
         keep_artifacts: false
