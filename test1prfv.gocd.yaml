@@ -127,6 +127,22 @@ pipelines:
             - script: |
                 echo deploy here
                 ls -la
+                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose up -d
+    - Smoke:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          test:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                echo command to run smoke test
 
   # Pull the images needed in the docker-compose.yaml
   # Deploy in dev
