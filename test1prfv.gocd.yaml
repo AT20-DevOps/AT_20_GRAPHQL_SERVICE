@@ -40,6 +40,8 @@ pipelines:
                 destination: html_report
             - build:
                 source: docker-compose.prfv.yaml
+            - build:
+                source: .env
           code_coverage:
             timeout: 0
             tasks:
@@ -122,6 +124,13 @@ pipelines:
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: docker-compose.prfv.yaml
+                is_file: true
+                run_if: passed
+            - fetch:
+                pipeline: Test1_PRFV
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: .env
                 is_file: true
                 run_if: passed
             - script: |
