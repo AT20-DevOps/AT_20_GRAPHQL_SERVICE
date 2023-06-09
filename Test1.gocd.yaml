@@ -42,7 +42,7 @@ pipelines:
             - build:
                 source: .env
     - code-inspection:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -58,7 +58,7 @@ pipelines:
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20graphql -Dsonar.projectKey=at20graph -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
     - PackageAndPublish:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -93,7 +93,7 @@ pipelines:
     lock_behavior: none
     display_order: -1
     environment_variables:
-      GIT_COMMIT_HASH: 1.1
+      GIT_COMMIT_HASH: 1.2
     materials:
       Test1:
         pipeline: Test1
