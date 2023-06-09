@@ -1,6 +1,6 @@
 format_version: 10
 pipelines:
-  Task11:
+  Test:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -16,7 +16,7 @@ pipelines:
         username: bdcol
         shallow_clone: false
         auto_update: true
-        branch: task11_bdcc
+        branch: task12_bdcc
         encrypted_password: AES:sNvzGsapD3HmbyDbsQeSnA==:+qIF5hTOaAjVstE1Bgs35A==
     stages:
     - Test:
@@ -39,8 +39,14 @@ pipelines:
             - build:
                 source: tests/report.html
                 destination: html_report
+            - build: 
+                source: Dockerfile
+            - build:
+                source: docker-compose.dev.bdcc.yaml
+            - build: 
+                source: .env
     - Code-inspection:
-        fetch_materials: false
+        fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -55,23 +61,7 @@ pipelines:
             - script: |
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20-bdcc -Dsonar.projectKey=at20-bdcc_at20-devops -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
-
-    - Quality-gate:
-        fetch_materials: true
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          wait-For-Quality-Gate:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - This is the quality gate stage
-                command: echo
-                run_if: passed           
+          
     - PackageAndPublish:
         fetch_materials: true
         keep_artifacts: false
@@ -90,36 +80,55 @@ pipelines:
                 docker login -u bdcc10 -p ${DOCKER_PASS}
                 docker tag graphql_servicego bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
                 docker push bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}
-
+            artifacts:
+              - build:
+                  source: docker-compose.dev.bdcc.yaml
+              - build: 
+                  source: .env
+           
+  Deploy:
+    group: AT20Group
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    materials:
+      Test:
+        pipeline: Test
+        stage: PackageAndPublish
+    stages:
     - Deploy-to-Dev:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
           type: success
           allow_only_on_success: false
         jobs:
-          Deploy:
+          deploy-to-Dev:
             timeout: 0
+            resources: 
+            - docker
             tasks:
-            - exec:
-                arguments:
-                - This is a command to deploy the service to the Dev area
-                command: echo
+            - fetch: 
+                pipeline: Test
+                stage: PackageAndPublish
+                job: Login-and-Push
+                source: docker-compose.dev.bdcc.yaml
+                is_file: true
                 run_if: passed
-    - Deploy-to-Auto:
-        fetch_materials: true
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          Deploy-Auto:
-            timeout: 0
-            tasks:
-            - exec:
-                arguments:
-                - This is a command for automatic deployment
-                command: echo
+            - fetch: 
+                pipeline: Test
+                stage: PackageAndPublish
+                job: Login-and-Push
+                source: .env
+                is_file: true
                 run_if: passed
+            - script: |
+                echo deploy here
+                ls -la
+                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.dev.bdcc.yaml up -d
+           
+        
+ 
