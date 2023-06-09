@@ -65,7 +65,7 @@ pipelines:
           type: success
           allow_only_on_success: false
         jobs:
-          unit-test:
+          PackageAndPublish:
             timeout: 0
             resources:
             - docker
