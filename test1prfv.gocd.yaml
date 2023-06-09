@@ -38,6 +38,10 @@ pipelines:
             - build:
                 source: tests/report.html
                 destination: html_report
+            - build:
+                source: docker-compose.prfv.yaml
+            - build:
+                source: .env
           code_coverage:
             timeout: 0
             tasks:
@@ -75,10 +79,82 @@ pipelines:
             resources:
             - docker
             tasks:
+            - fetch:
+                is_file: true
+                source: docker-compose.prfv.yaml
+                stage: Test
+                job: unit-test
+                run_if: passed
             - script: |
                 docker build -t at20_graphql .
                 docker login -u pprfv -p ${DOCKER_PASS}
                 docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}
                 docker push pprfv/pprfv:${GIT_COMMIT_HASH}
+            artifacts:
+            - build:
+                source: docker-compose.prfv.yaml
+            - build:
+                source: .env
 
+  Acceptance:
+    group: AT20Group
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    materials:
+      Test1_PRFV:
+        pipeline: Test1_PRFV
+        stage: PackageAndPublish
+    stages:
+    - DeployToDev:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          deployToDev:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - fetch:
+                pipeline: Test1_PRFV
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: docker-compose.prfv.yaml
+                is_file: true
+                run_if: passed
+            - fetch:
+                pipeline: Test1_PRFV
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: .env
+                is_file: true
+                run_if: passed
+            - script: |
+                echo deploy here
+                ls -la
+                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.prfv.yaml up -d
+    - Smoke:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          test:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                echo command to run smoke test
 
+  # Pull the images needed in the docker-compose.yaml
+  # Deploy in dev
+  # Run the test
