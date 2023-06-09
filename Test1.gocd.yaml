@@ -84,7 +84,7 @@ pipelines:
                 docker push willvq/graphql:${GIT_COMMIT_HASH}
             artifacts:
             - build:
-                source: docker-compose.prfv.yaml
+                source: docker-compose.wjvq.yaml
             - build:
                 source: .env
   Acceptance:
@@ -93,7 +93,7 @@ pipelines:
     lock_behavior: none
     display_order: -1
     environment_variables:
-      GIT_COMMIT_HASH: 1.2
+      GIT_COMMIT_HASH: 1.1
     materials:
       Test1:
         pipeline: Test1
