@@ -72,7 +72,7 @@ pipelines:
             tasks:
             - fetch:
                 is_file: true
-                source: docker-compose.prfv.yaml
+                source: docker-compose.wjvq.yaml
                 stage: Test
                 job: unit-test
                 run_if: passed
