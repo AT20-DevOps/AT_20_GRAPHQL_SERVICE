@@ -70,13 +70,7 @@ pipeline {
 
                 }
             }
-        stage ("Wait-for-DockerHub") {
-            steps{
-                echo 'Waiting 10 seconds to allow docker hub to update'
-                sleep(time:10,unit:"SECONDS")
-            }
-         
-            }
+
         stage ('DeployToDev') {
             steps {
                 sh 'echo ${GIT_COMMIT_HASH}'
