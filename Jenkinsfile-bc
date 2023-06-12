@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
-        TARGET_HOST ='192.168.56.70'
+        TARGET_HOST ='192.168.0.18'
         TAG_VERSION=sh (script: "git rev-parse --short HEAD", returnStdout: true).trim()
         GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
