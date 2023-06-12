@@ -64,7 +64,6 @@ pipeline {
             //when { expression { params.skip_test != true } }
             steps {
                 //sh 'export TAG=$(git log --pretty=format:'%h' -n 1)'
-                sh 'echo %GIT_COMMIT%'
                 sh 'docker login -u pprfv -p ${DOCKER_PASS}'
                 sh 'docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}'
                 sh 'docker push pprfv/pprfv:${GIT_COMMIT_HASH}'
@@ -78,7 +77,7 @@ pipeline {
         }
         stage('DeployAuto') {
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yaml up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && DOCKER_HOST=ssh://$TARGET_HOST && docker-compose -f docker-compose.prfv.yaml up -d'
                 sh 'echo command to run automation tests'
             }
         }
