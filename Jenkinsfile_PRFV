@@ -54,7 +54,6 @@ pipeline {
               }
             }
         }
-    }
         stage('Package') {
            // when { expression { params.skip_test != true } }
             steps {
