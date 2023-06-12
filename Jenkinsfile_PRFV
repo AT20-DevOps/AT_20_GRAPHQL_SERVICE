@@ -71,8 +71,9 @@ pipeline {
             }
         }
         stage('Deploytodev') {
+            when { expression { params.skip_stage != true } }
             steps {
-                when { expression { params.skip_stage != true } }
+
                 //sh 'docker compose -f docker-compose.prfv.yml up -d'
                 sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yaml up -d'
             }
