@@ -6,7 +6,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
-        TARGET_HOST = '192.168.56.61'
+        TARGET_HOST = '192.168.1.17'
         TAG_VERSION = "1.0"
         GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
@@ -26,7 +26,7 @@ pipeline {
             }
         }
         stage('CodeInspection') {
-
+            when { expression { params.skip_stage != true } }
             agent {
                 docker 'sonarsource/sonar-scanner-cli'
             }
@@ -41,7 +41,7 @@ pipeline {
             }
         }
         stage('Quality gate') {
-
+            when { expression { params.skip_stage != true } }
             steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
@@ -54,7 +54,6 @@ pipeline {
               }
             }
         }
-    }
         stage('Package') {
            // when { expression { params.skip_test != true } }
             steps {
@@ -65,7 +64,6 @@ pipeline {
             //when { expression { params.skip_test != true } }
             steps {
                 //sh 'export TAG=$(git log --pretty=format:'%h' -n 1)'
-                sh 'echo %GIT_COMMIT%'
                 sh 'docker login -u pprfv -p ${DOCKER_PASS}'
                 sh 'docker tag at20_graphql pprfv/pprfv:${GIT_COMMIT_HASH}'
                 sh 'docker push pprfv/pprfv:${GIT_COMMIT_HASH}'
@@ -79,7 +77,7 @@ pipeline {
         }
         stage('DeployAuto') {
             steps {
-                sh 'DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.prfv.yaml up -d'
+                sh 'export TAG_VERSION=${GIT_COMMIT_HASH} && DOCKER_HOST=ssh://$TARGET_HOST && docker-compose -f docker-compose.prfv.yaml up -d'
                 sh 'echo command to run automation tests'
             }
         }
@@ -87,16 +85,15 @@ pipeline {
     }
     post {
         always {
-            steps {
                 script {
                     try {
-                        sh 'docker rmi $(docker images -f "dangling=true" -q)'
+                        sh 'docker image prune -a -f'
                         sh 'docker system prune -a'
                     } catch (Exception e) {
                         echo 'Failed to execute the Docker command. Skipping.'
                         return
                     }
-                }
             }
         }
     }
+}
