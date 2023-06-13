@@ -7,15 +7,16 @@ pipelines:
     display_order: -1
     environment_variables:
       GIT_COMMIT_HASH: 1.2
+      TARGET_HOST: 192.168.1.102
     secure_variables:
-      SONAR_TOKEN: AES:BZKuFNen4zAfwGhpaVOjAg==:CJvY4wCTBClAVZIlu2Effb2WdxiD+rwpJ4S9jd3BQGaITagQhWJH0F78Re7Bhisa
-      DOCKER_PASS: AES:gg3IEdeWQAPllSZwgGGirw==:cs2JoGlYYS9VYF2C3eH1Wg==
+      SONAR_TOKEN: AES:WufJhmzajqbm8DLYwJUCYQ==:wlMNRVkpck/omy4lnVYZPJa+8amHBl6QhZyDxLBMpwqTvqhqsq9o8Jsp6cZeHgKl
+      DOCKER_PASS: AES:/3aDLS8wEIm7Z8WQvRiXVg==:0QfCFV6ZO0w55lWLe6F0pw==
     materials:
       git-3705b1f:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         shallow_clone: false
         auto_update: true
-        branch: task12_wjvq
+        branch: task14_wjvq
     stages:
     - Test:
         fetch_materials: true
@@ -130,6 +131,38 @@ pipelines:
                 echo deploy here
                 ls -la
                 export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.wjvq.yaml up -d
+    - DeployAuto:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          deployToDev:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - fetch:
+                pipeline: Test1
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: docker-compose.wjvq.yaml
+                is_file: true
+                run_if: passed
+            - fetch:
+                pipeline: Test1
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: .env
+                is_file: true
+                run_if: passed
+            - script: |
+                echo deploy here
+                ls -la
+                DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH}
+                DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.wjvq.yaml up -d
     - Smoke:
         fetch_materials: false
         keep_artifacts: false
