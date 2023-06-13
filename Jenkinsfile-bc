@@ -1,8 +1,5 @@
 pipeline {
     agent any
-     parameters {
-        booleanParam(name: 'skip_stage', defaultValue: true, description: 'Set to true to skip stage')
-    }
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
@@ -12,7 +9,6 @@ pipeline {
     }
     stages {
         stage('Test') {
-            //when { expression { params.skip_stage != true } }
             agent {
                 docker {
                     image 'node:18-alpine3.16'
@@ -29,7 +25,6 @@ pipeline {
                     }
                 }
         stage('Code inspection') {
-            //when { expression { params.skip_stage != true } }
             steps {
                 withSonarQubeEnv('sonar_scanner') {
                     sh '/var/jenkins_home/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner \
@@ -38,17 +33,13 @@ pipeline {
                         -Dsonar.sources=. \
                         -Dsonar.host.url=https://sonarcloud.io'
                    }
-              
+                }
             }
-        }
-        
         stage('Quality gate') {
-            //when { expression { params.skip_stage != true } }
             steps {
               timeout(time: 600, unit: 'SECONDS') {
               script {
                     def qg = waitForQualityGate()
-                    sh "echo ${qg.status}"
                     if (qg.status != 'OK') {
                     error "Pipeline aborted due to quality gate failure: ${qg.status}"
                     }
@@ -62,7 +53,6 @@ pipeline {
                 }
             }
         stage('Publish'){
-            //when { expression { params.skip_stage != true } }
             steps{
                 sh 'docker login -u bdcc10 -p ${DOCKER_PASS}'
                 sh 'docker tag graphql_service bdcc10/bdcc-at20_graphql_service:${GIT_COMMIT_HASH}'
@@ -70,23 +60,26 @@ pipeline {
 
                 }
             }
-
         stage ('DeployToDev') {
             steps {
                 sh 'echo ${GIT_COMMIT_HASH}'
                 sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
                 sh 'echo ${TAG_VERSION}'
                 sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
+                }
             }
-        }
          stage ('DeployToAuto') {
-            when { expression { params.skip_stage != true } }
             steps {
                 sh 'DOCKER_HOST=ssh://${TARGET_HOST} docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
         }
-    }
 
+        stage ('Email notification') {
+            steps {
+                emailext attachLog: true, body: 'Extended email text test', subject: 'Extended email text test', to: 'bdcctesting109@gmail.com'
+            }
+        }
+    }
     post {
         always {
             sh 'docker image prune -a -f'
