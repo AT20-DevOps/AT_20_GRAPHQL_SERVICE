@@ -7,7 +7,7 @@ pipelines:
     display_order: -1
     environment_variables:
       GIT_COMMIT_HASH: 1.2
-      TARGET_HOST: 192.168.1.102
+      TARGET_HOST: 192.168.1.105
     secure_variables:
       SONAR_TOKEN: AES:WufJhmzajqbm8DLYwJUCYQ==:wlMNRVkpck/omy4lnVYZPJa+8amHBl6QhZyDxLBMpwqTvqhqsq9o8Jsp6cZeHgKl
       DOCKER_PASS: AES:/3aDLS8wEIm7Z8WQvRiXVg==:0QfCFV6ZO0w55lWLe6F0pw==
