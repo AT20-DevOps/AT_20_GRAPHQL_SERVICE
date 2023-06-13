@@ -82,13 +82,13 @@ pipeline {
         success {
             emailext (attachLog: true, 
             body: 'The following file contains the log for the GraphQl service build successfully', 
-            subject: 'Build results for the GraphQl service', to: 'bdcctesting109@gmail.com')
+            subject: 'Build results for the GraphQl service', to: 'bdcolquec109@gmail.com')
         }
 
         failure {
             emailext (attachLog: true, 
             body: 'The following file contains the log for the failed build of the GraphQl service ', 
-            subject: 'Build results for the GraphQl service', to: 'bdcctesting109@gmail.com')
+            subject: 'Build results for the GraphQl service', to: 'bdcolquec109@gmail.com')
         }
     }
        
