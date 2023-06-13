@@ -73,17 +73,22 @@ pipeline {
                 sh 'DOCKER_HOST=ssh://${TARGET_HOST} docker-compose -f docker-compose.dev.bdcc.yaml up -d'
             }
         }
-
-        stage ('Email notification') {
-            steps {
-                emailext attachLog: true, body: 'Extended email text test', subject: 'Extended email text test', to: 'bdcctesting109@gmail.com'
-            }
-        }
     }
     post {
         always {
             sh 'docker image prune -a -f'
             sh 'docker system prune -a -f'
+        }
+        success {
+            emailext (attachLog: true, 
+            body: 'The following file contains the log for the GraphQl service build successfully', 
+            subject: 'Build results for the GraphQl service', to: 'bdcctesting109@gmail.com')
+        }
+
+        failure {
+            emailext (attachLog: true, 
+            body: 'The following file contains the log for the failed build of the GraphQl service ', 
+            subject: 'Build results for the GraphQl service', to: 'bdcctesting109@gmail.com')
         }
     }
        
