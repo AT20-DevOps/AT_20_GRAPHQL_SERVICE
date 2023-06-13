@@ -8,8 +8,8 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     secure_variables:
-      SONAR_TOKEN: AES:cjrgxiRSM4PY/wDXK+y3Vg==:qPjRwCIP1C+pJjarlFJnX9Hi1tM8DzlbyECBhlaOoSDtwpztTWrnNO7gz6VQZC9Y
-      DOCKER_PASS: AES:ki93xaWSYnO7/Ws7Qew3gQ==:ucIupHeVZ8oJd31PoXfkfQ==
+      SONAR_TOKEN: AES:WufJhmzajqbm8DLYwJUCYQ==:wlMNRVkpck/omy4lnVYZPJa+8amHBl6QhZyDxLBMpwqTvqhqsq9o8Jsp6cZeHgKl
+      DOCKER_PASS: AES:/3aDLS8wEIm7Z8WQvRiXVg==:0QfCFV6ZO0w55lWLe6F0pw==
     materials:
       git-3705b1f:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
