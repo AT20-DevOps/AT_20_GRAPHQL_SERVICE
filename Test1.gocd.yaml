@@ -86,8 +86,6 @@ pipelines:
             artifacts:
             - build:
                 source: docker-compose.wjvq.yaml
-            - build:
-                source: .env
   Acceptance:
     group: AT20_Graphql
     label_template: ${COUNT}
