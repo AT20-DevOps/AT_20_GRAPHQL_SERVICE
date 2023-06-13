@@ -42,6 +42,8 @@ pipelines:
                 source: docker-compose.wjvq.yaml
             - build:
                 source: .env
+            - build:
+                source: Dockerfile
     - code-inspection:
         fetch_materials: false
         keep_artifacts: false
@@ -74,6 +76,12 @@ pipelines:
             - fetch:
                 is_file: false
                 source: docker-compose.wjvq.yaml
+                stage: Test
+                job: unit-test
+                run_if: passed
+            - fetch:
+                is_file: true
+                source: Dockerfile
                 stage: Test
                 job: unit-test
                 run_if: passed
