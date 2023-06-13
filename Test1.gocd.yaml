@@ -102,11 +102,6 @@ pipelines:
             resources:
             - docker
             tasks:
-            - fetch:
-                pipeline: Test1
-                stage: PackageAndPublish
-                job: PackageAndPublish
-                run_if: passed
             - script: |
                 echo deploy here
                 ls -la
@@ -124,11 +119,6 @@ pipelines:
             resources:
             - docker
             tasks:
-            - fetch:
-                pipeline: Test1
-                stage: PackageAndPublish
-                job: PackageAndPublish
-                run_if: passed
             - script: |
                 echo deploy here
                 ls -la
