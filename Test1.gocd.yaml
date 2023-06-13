@@ -1,6 +1,6 @@
 format_version: 10
 pipelines:
-  Build:
+  Test1:
     group: AT20_Graphql
     label_template: ${COUNT}
     lock_behavior: none
@@ -96,8 +96,8 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
-      Build:
-        pipeline: Build
+      Test1:
+        pipeline: Test1
         stage: PackageAndPublish
     stages:
     - DeployToDev:
@@ -114,14 +114,14 @@ pipelines:
             - docker
             tasks:
             - fetch:
-                pipeline: Build
+                pipeline: Test1
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: docker-compose.wjvq.yaml
                 is_file: true
                 run_if: passed
             - fetch:
-                pipeline: Build
+                pipeline: Test1
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: .env
@@ -145,14 +145,14 @@ pipelines:
             - docker
             tasks:
             - fetch:
-                pipeline: Build
+                pipeline: Test1
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: docker-compose.wjvq.yaml
                 is_file: true
                 run_if: passed
             - fetch:
-                pipeline: Build
+                pipeline: Test1
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: .env
