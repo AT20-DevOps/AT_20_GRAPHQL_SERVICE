@@ -72,7 +72,7 @@ pipelines:
             - docker
             tasks:
             - fetch:
-                is_file: false
+                is_file: true
                 source: docker-compose.wjvq.yaml
                 stage: Test
                 job: unit-test
