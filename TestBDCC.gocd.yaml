@@ -86,7 +86,7 @@ pipelines:
               - build: 
                   source: .env
            
-  Deploy:
+  Acceptance:
     group: AT20Group
     label_template: ${COUNT}
     lock_behavior: none
@@ -130,5 +130,19 @@ pipelines:
                 ls -la
                 export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.dev.bdcc.yaml up -d
            
-        
+    - Smoke:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          test:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                echo command to run smoke test
  
