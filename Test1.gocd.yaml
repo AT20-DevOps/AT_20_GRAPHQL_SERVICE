@@ -77,6 +77,12 @@ pipelines:
                 stage: Test
                 job: unit-test
                 run_if: passed
+            - fetch:
+                is_file: true
+                source: .env
+                stage: Test
+                job: unit-test
+                run_if: passed
             - script: |
                 ls -la
                 docker build -t graphql-service-wjvq .
