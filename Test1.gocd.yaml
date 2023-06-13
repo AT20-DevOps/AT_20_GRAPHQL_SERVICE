@@ -161,7 +161,8 @@ pipelines:
             - script: |
                 echo deploy here
                 ls -la
-                DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH} && docker-compose -f docker-compose.wjvq.yaml up -d
+                DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH}
+                DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.wjvq.yaml up -d
     - Smoke:
         fetch_materials: false
         keep_artifacts: false
