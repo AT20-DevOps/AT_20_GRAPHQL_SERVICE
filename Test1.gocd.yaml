@@ -161,7 +161,7 @@ pipelines:
             - script: |
                 ls -la
                 export TAG_VERSION=${GIT_COMMIT_HASH}
-                DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.wjvq.yaml up -d
+                DOCKER_HOST=ssh://192.168.1.105 docker-compose -f docker-compose.wjvq.yaml up -d
     - Smoke:
         fetch_materials: false
         keep_artifacts: false
