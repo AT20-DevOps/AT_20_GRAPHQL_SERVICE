@@ -15,7 +15,7 @@ pipelines:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         shallow_clone: false
         auto_update: true
-        branch: task11_wjvq
+        branch: task12_wjvq
     stages:
     - Test:
         fetch_materials: true
@@ -37,8 +37,12 @@ pipelines:
             - build:
                 source: tests/report.html
                 destination: html_report
+            - build:
+                source: docker-compose.wjvq.yaml
+            - build:
+                source: .env
     - code-inspection:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
@@ -54,22 +58,91 @@ pipelines:
                 ls -la
                 /godata/.sonar/sonar-scanner-4.7.0.2747-linux/bin/sonar-scanner -Dsonar.organization=at20graphql -Dsonar.projectKey=at20graph -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io
     - PackageAndPublish:
-        fetch_materials: true
+        fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
         approval:
           type: success
           allow_only_on_success: false
         jobs:
-          unit-test:
+          PackageAndPublish:
             timeout: 0
             resources:
             - docker
             tasks:
+            - fetch:
+                is_file: true
+                source: docker-compose.wjvq.yaml
+                stage: Test
+                job: unit-test
+                run_if: passed
             - script: |
                 ls -la
                 docker build -t graphql-service-wjvq .
                 docker login -u willvq -p ${DOCKER_PASS}
                 docker tag graphql-service-wjvq willvq/graphql:${GIT_COMMIT_HASH}
                 docker push willvq/graphql:${GIT_COMMIT_HASH}
+            artifacts:
+            - build:
+                source: docker-compose.wjvq.yaml
+            - build:
+                source: .env
+  Acceptance:
+    group: AT20_Graphql
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    materials:
+      Test1:
+        pipeline: Test1
+        stage: PackageAndPublish
+    stages:
+    - DeployToDev:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          deployToDev:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - fetch:
+                pipeline: Test1
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: docker-compose.wjvq.yaml
+                is_file: true
+                run_if: passed
+            - fetch:
+                pipeline: Test1
+                stage: PackageAndPublish
+                job: PackageAndPublish
+                source: .env
+                is_file: true
+                run_if: passed
+            - script: |
+                echo deploy here
+                ls -la
+                export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.wjvq.yaml up -d
+    - Smoke:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          test:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                echo command to run smoke test
 
