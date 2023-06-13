@@ -131,6 +131,33 @@ pipelines:
                 echo deploy here
                 ls -la
                 export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.wjvq.yaml up -d
+    - Smoke:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          test:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - script: |
+                echo command to run smoke test
+  Capacity:
+    group: AT20_Graphql
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    materials:
+      Test1:
+        pipeline: Test1
+        stage: PackageAndPublish
+    stages:
     - DeployAuto:
         fetch_materials: false
         keep_artifacts: false
@@ -162,19 +189,4 @@ pipelines:
                 ls -la
                 export TAG_VERSION=${GIT_COMMIT_HASH}
                 DOCKER_HOST=ssh://192.168.1.105 docker-compose -f docker-compose.wjvq.yaml up -d
-    - Smoke:
-        fetch_materials: false
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          test:
-            timeout: 0
-            resources:
-            - docker
-            tasks:
-            - script: |
-                echo command to run smoke test
 
