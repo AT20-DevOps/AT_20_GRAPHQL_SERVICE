@@ -137,8 +137,6 @@ pipelines:
                 pipeline: Test1
                 stage: PackageAndPublish
                 job: PackageAndPublish
-                source: docker-compose.wjvq.yaml
-                is_file: true
                 run_if: passed
             - fetch:
                 pipeline: Test1
