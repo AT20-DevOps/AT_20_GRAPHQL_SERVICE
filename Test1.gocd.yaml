@@ -42,8 +42,6 @@ pipelines:
                 source: docker-compose.wjvq.yaml
             - build:
                 source: .env
-            - build:
-                source: Dockerfile
     - code-inspection:
         fetch_materials: false
         keep_artifacts: false
