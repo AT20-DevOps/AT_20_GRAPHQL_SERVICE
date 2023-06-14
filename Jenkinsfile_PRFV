@@ -81,11 +81,9 @@ pipeline {
 
         }
         success{
-            archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*'
             emailext (attachLog: true,
             subject: "Log Email",
-            body: "Test",
-            attachmentsPattern:'tests/report.html, test/jest-html-reporters-attach/*', to: "${recipientEmails}")
+            body: "Test", to: "${recipientEmails}")
         }
         changed{
             emailext (attachLog: true,
