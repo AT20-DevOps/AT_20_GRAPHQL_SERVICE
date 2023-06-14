@@ -79,19 +79,15 @@ pipeline {
     }
     post {
         always {
-                script {
-                    try {
-                        emailext to: "${recipientEmails}",
-                        subject: "Log Email",
-                        body: "Test",
-                        attachLog: true
-                        sh 'docker image prune -a -f'
-                        sh 'docker system prune -a'
-                    } catch (Exception e) {
-                        echo 'Failed to execute the Docker command. Skipping.'
-                        return
-                    }
-            }
+            sh 'docker image prune -a -f'
+            sh 'docker system prune -a'
+
+        }
+        succes{
+            emailext to: "${recipientEmails}",
+            subject: "Log Email",
+            body: "Test",
+            attachLog: true
         }
         changed{
             emailext to: "${recipientEmails}",
