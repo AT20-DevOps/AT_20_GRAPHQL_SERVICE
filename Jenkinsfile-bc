@@ -78,8 +78,8 @@ pipeline {
             sh 'docker system prune -a -f'
             emailext (
             attachLog: true, 
-            body: 'Pipeline for ${JOB_NAME} on build ${BUILD_NUMBER} has been executed ${BUILD_STATUS}, for more details go to ${BUILD_URL}', 
-            subject: 'The GraphQl service build was executed ${BUILD_STATUS}', to: 'bdcolquec109@gmail.com'
+            body: 'Pipeline for ${JOB_NAME} on build ${BUILD_NUMBER} has been executed with status: ${BUILD_STATUS}, for more details go to ${BUILD_URL}', 
+            subject: 'The GraphQl service build was executed with status: ${BUILD_STATUS}', to: 'bdcolquec109@gmail.com'
             )
         }
     }
