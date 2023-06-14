@@ -1,13 +1,13 @@
 format_version: 10
 pipelines:
-  Test1:
+  Commit:
     group: AT20_Graphql
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
     environment_variables:
       GIT_COMMIT_HASH: 1.2
-      TARGET_HOST: 192.168.1.102
+      TARGET_HOST: 192.168.1.105
     secure_variables:
       SONAR_TOKEN: AES:WufJhmzajqbm8DLYwJUCYQ==:wlMNRVkpck/omy4lnVYZPJa+8amHBl6QhZyDxLBMpwqTvqhqsq9o8Jsp6cZeHgKl
       DOCKER_PASS: AES:/3aDLS8wEIm7Z8WQvRiXVg==:0QfCFV6ZO0w55lWLe6F0pw==
@@ -16,7 +16,7 @@ pipelines:
         git: https://github.com/AT20-DevOps/AT_20_GRAPHQL_SERVICE.git
         shallow_clone: false
         auto_update: true
-        branch: task14_wjvq
+        branch: task15_wjvq
     stages:
     - Test:
         fetch_materials: true
@@ -77,6 +77,12 @@ pipelines:
                 stage: Test
                 job: unit-test
                 run_if: passed
+            - fetch:
+                is_file: true
+                source: .env
+                stage: Test
+                job: unit-test
+                run_if: passed
             - script: |
                 ls -la
                 docker build -t graphql-service-wjvq .
@@ -96,8 +102,8 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
-      Test1:
-        pipeline: Test1
+      Commit:
+        pipeline: Commit
         stage: PackageAndPublish
     stages:
     - DeployToDev:
@@ -114,14 +120,14 @@ pipelines:
             - docker
             tasks:
             - fetch:
-                pipeline: Test1
+                pipeline: Commit
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: docker-compose.wjvq.yaml
                 is_file: true
                 run_if: passed
             - fetch:
-                pipeline: Test1
+                pipeline: Commit
                 stage: PackageAndPublish
                 job: PackageAndPublish
                 source: .env
@@ -131,38 +137,6 @@ pipelines:
                 echo deploy here
                 ls -la
                 export TAG_VERSION="${GIT_COMMIT_HASH}" && docker-compose -f docker-compose.wjvq.yaml up -d
-    - DeployAuto:
-        fetch_materials: false
-        keep_artifacts: false
-        clean_workspace: false
-        approval:
-          type: success
-          allow_only_on_success: false
-        jobs:
-          deployToDev:
-            timeout: 0
-            resources:
-            - docker
-            tasks:
-            - fetch:
-                pipeline: Test1
-                stage: PackageAndPublish
-                job: PackageAndPublish
-                source: docker-compose.wjvq.yaml
-                is_file: true
-                run_if: passed
-            - fetch:
-                pipeline: Test1
-                stage: PackageAndPublish
-                job: PackageAndPublish
-                source: .env
-                is_file: true
-                run_if: passed
-            - script: |
-                echo deploy here
-                ls -la
-                DOCKER_HOST=ssh://$TARGET_HOST export TAG_VERSION=${GIT_COMMIT_HASH}
-                DOCKER_HOST=ssh://$TARGET_HOST docker-compose -f docker-compose.wjvq.yaml up -d
     - Smoke:
         fetch_materials: false
         keep_artifacts: false
@@ -178,4 +152,47 @@ pipelines:
             tasks:
             - script: |
                 echo command to run smoke test
+  Capacity:
+    group: AT20_Graphql
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    environment_variables:
+      GIT_COMMIT_HASH: 1.2
+    materials:
+      Acceptance:
+        pipeline: Acceptance
+        stage: DeployToDev
+    stages:
+    - DeployAuto:
+        fetch_materials: false
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          deployToDev:
+            timeout: 0
+            resources:
+            - docker
+            tasks:
+            - fetch:
+                pipeline: Acceptance
+                stage: DeployToDev
+                job: deployToDev
+                source: docker-compose.wjvq.yaml
+                is_file: true
+                run_if: passed
+            - fetch:
+                pipeline: Acceptance
+                stage: DeployToDev
+                job: deployToDev
+                source: .env
+                is_file: true
+                run_if: passed
+            - script: |
+                ls -la
+                export TAG_VERSION=${GIT_COMMIT_HASH}
+                DOCKER_HOST=ssh://192.168.1.105 docker-compose -f docker-compose.wjvq.yaml up -d
 
