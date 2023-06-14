@@ -62,9 +62,7 @@ pipeline {
             }
         stage ('DeployToDev') {
             steps {
-                sh 'echo ${GIT_COMMIT_HASH}'
                 sh 'export TAG_VERSION=${GIT_COMMIT_HASH}'
-                sh 'echo ${TAG_VERSION}'
                 sh 'docker-compose -f docker-compose.dev.bdcc.yaml up -d'
                 }
             }
@@ -78,18 +76,11 @@ pipeline {
         always {
             sh 'docker image prune -a -f'
             sh 'docker system prune -a -f'
-        }
-        success {
-            emailext (attachLog: true, 
-            body: 'The following file contains the log for the GraphQl service build successfully', 
-            subject: 'Build results for the GraphQl service', to: 'bdcolquec109@gmail.com')
-        }
-
-        failure {
-            emailext (attachLog: true, 
-            body: 'The following file contains the log for the failed build of the GraphQl service ', 
-            subject: 'Build results for the GraphQl service', to: 'bdcolquec109@gmail.com')
+            emailext (
+            attachLog: true, 
+            body: 'Pipeline for ${JOB_NAME} on build ${BUILD_NUMBER} has been executed ${BUILD_STATUS}, for more details go to ${BUILD_URL}', 
+            subject: 'The GraphQl service build was executed ${BUILD_STATUS}', to: 'bdcolquec109@gmail.com'
+            )
         }
     }
-       
 }
