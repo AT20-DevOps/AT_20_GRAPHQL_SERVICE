@@ -100,7 +100,6 @@ pipelines:
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
-    state: Passed
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
@@ -112,6 +111,8 @@ pipelines:
         fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
+        state: Passed
+        result: Passed
         approval:
           type: success
           allow_only_on_success: false
