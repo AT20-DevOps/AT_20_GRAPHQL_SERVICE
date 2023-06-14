@@ -81,20 +81,24 @@ pipeline {
 
         }
         succes{
-            emailext to: "${recipientEmails}",
-            subject: "Log Email",
-            body: "Test",
-            attachLog: true
+            archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*'
+            emailext (
+                attachLog: true
+                subject: "Log Email",
+                body: "Test",
+                attachmentsPattern:'tests/report.html, test/jest-html-reporters-attach/*', to: "${recipientEmails}")
         }
         changed{
-            emailext to: "${recipientEmails}",
-            subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-            body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}"
+            emailext (
+                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}", to: "${recipientEmails}")
+
         }
         failure{
-            emailext to: "${recipientEmails}",
-            subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
-            body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}"
+            emailext (
+                subject: "jenkins build:${currentBuild.currentResult}: ${env.JOB_NAME}",
+                body: "${currentBuild.currentResult}: Job ${env.JOB_NAME}\nMore Info can be found here: ${env.BUILD_URL}",to: "${recipientEmails}")
+
         }
     }
 }
