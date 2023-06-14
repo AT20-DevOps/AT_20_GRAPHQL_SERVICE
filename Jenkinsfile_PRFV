@@ -80,7 +80,7 @@ pipeline {
             sh 'docker system prune -a'
 
         }
-        succes{
+        success{
             archiveArtifacts artifacts: 'tests/report.html, test/jest-html-reporters-attach/*'
             emailext (attachLog: true,
                 subject: "Log Email",
