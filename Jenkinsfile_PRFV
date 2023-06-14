@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_PASS = credentials('docker_pass')
         SONAR_TOKEN = credentials('sonar_token')
-        TARGET_HOST = '192.168.1.17'
+        TARGET_HOST = '192.168.1.13'
         recipientEmails = "fernandezvillarroel@gmail.com"
         GIT_COMMIT_HASH = sh (script: "git rev-parse --short HEAD", returnStdout: true).trim()
     }
