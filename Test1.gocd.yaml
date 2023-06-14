@@ -160,9 +160,9 @@ pipelines:
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
-      Commit:
-        pipeline: Commit
-        stage: PackageAndPublish
+      Acceptance:
+        pipeline: Acceptance
+        stage: DeployToDev
     stages:
     - DeployAuto:
         fetch_materials: false
