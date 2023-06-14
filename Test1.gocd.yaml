@@ -22,7 +22,6 @@ pipelines:
         fetch_materials: true
         keep_artifacts: false
         clean_workspace: false
-        state: Building
         approval:
           type: success
           allow_only_on_success: false
@@ -111,8 +110,6 @@ pipelines:
         fetch_materials: false
         keep_artifacts: false
         clean_workspace: false
-        state: Passed
-        result: Passed
         approval:
           type: success
           allow_only_on_success: false
