@@ -100,6 +100,7 @@ pipelines:
     label_template: ${COUNT}
     lock_behavior: none
     display_order: -1
+    state: Passed
     environment_variables:
       GIT_COMMIT_HASH: 1.2
     materials:
