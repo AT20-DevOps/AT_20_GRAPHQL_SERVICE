@@ -178,16 +178,16 @@ pipelines:
             - docker
             tasks:
             - fetch:
-                pipeline: Commit
-                stage: PackageAndPublish
-                job: PackageAndPublish
+                pipeline: Acceptance
+                stage: DeployToDev
+                job: deployToDev
                 source: docker-compose.wjvq.yaml
                 is_file: true
                 run_if: passed
             - fetch:
-                pipeline: Commit
-                stage: PackageAndPublish
-                job: PackageAndPublish
+                pipeline: Acceptance
+                stage: DeployToDev
+                job: deployToDev
                 source: .env
                 is_file: true
                 run_if: passed
